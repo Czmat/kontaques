@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -9,7 +9,6 @@ import {
 import Home from './pages/Home';
 import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
-import { connect } from 'react-redux';
 import Dashboard from './pages/Dashboard';
 import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
@@ -43,23 +42,3 @@ function App() {
 }
 
 export default App;
-
-function PrivateRoute({ children, ...rest }) {
-  //   return (
-  //     <Route
-  //       {...rest}
-  //       render={({ location }) =>
-  //         auth ? (
-  //           children
-  //         ) : (
-  //           <Redirect
-  //             to={{
-  //               pathname: '/login',
-  //               state: { from: location },
-  //             }}
-  //           />
-  //         )
-  //       }
-  //     />
-  //   );
-}

@@ -5,14 +5,13 @@ import '../css/style.css';
 
 function Dashboard({ auth }) {
   let history = useHistory();
-  console.log(auth);
+  console.log(auth.auth);
 
-  if (auth.auth != true) {
+  if (auth.auth == null) {
     setTimeout(() => {
       history.push('/login');
     }, 1000);
   }
-
   return (
     <div>
       {auth.auth ? (

@@ -1,20 +1,25 @@
 import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
+import firebase, { signIn } from '../firebase/firebase';
+
+const provider = new firebase.auth.GoogleAuthProvider();
+provider.addScope('https://mail.google.com/');
 
 function LoginPage({ auth, dispatch }) {
   let history = useHistory();
   let location = useLocation();
 
-  useEffect(() => {
-    if (auth.auth) {
-      history.push('/dashboard');
-    }
-  }, []);
-
-  function loginHandler() {
-    dispatch({ type: 'AUTH_USER', payload: true });
+  if (auth.auth) {
     history.push('/dashboard');
+  }
+  function loginHandler() {
+    firebase
+      .auth()
+      .setPersistence('local')
+      .then(() => {
+        firebase.auth().signInWithPopup(provider);
+      });
   }
 
   return (

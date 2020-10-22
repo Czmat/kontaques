@@ -1,15 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import '../css/style.css';
+import firebase from '../firebase/firebase';
 
 function Header({ auth, dispatch }) {
   let history = useHistory();
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        dispatch({ type: 'AUTH_USER', payload: user });
+      }
+    });
+  }, []);
+
   const Login = () => {
     history.push('/login');
   };
+
   const Logout = () => {
-    dispatch({ type: 'AUTH_USER', payload: false });
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        dispatch({ type: 'AUTH_USER', payload: null });
+      });
   };
   return (
     <div className="nav">
