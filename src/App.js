@@ -14,6 +14,7 @@ import { Provider } from 'react-redux';
 import reduxThunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import reducers from './redux/rootReducer';
+import firebase from './firebase/firebase';
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
