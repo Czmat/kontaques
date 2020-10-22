@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -6,11 +6,11 @@ function LoginPage({ auth, dispatch }) {
   let history = useHistory();
   let location = useLocation();
 
-  let { from } = location.state || { from: { pathname: '/' } };
-  // let login = () => {
-  //   fakeAuth.authenticate(() => {
-  //     history.replace(from);
-  //   });
+  useEffect(() => {
+    if (auth.auth) {
+      history.push('/dashboard');
+    }
+  }, []);
 
   function loginHandler() {
     dispatch({ type: 'AUTH_USER', payload: true });
