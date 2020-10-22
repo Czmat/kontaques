@@ -1,23 +1,25 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import '../css/style.css';
 
 function Dashboard({ auth }) {
   let history = useHistory();
-  console.log(auth);
+  console.log(auth.auth);
 
-  if (auth.auth != true) {
+  if (auth.auth == null) {
     setTimeout(() => {
       history.push('/login');
-    }, 3000);
+    }, 1000);
   }
-
   return (
     <div>
       {auth.auth ? (
         <div>Congratulations. This is the Dashboard. This is protected.</div>
       ) : (
-        <div>Sorry dude. Redirecting you now</div>
+        <div className="display-i-b">
+          <div className="loader"></div>
+        </div>
       )}
     </div>
   );

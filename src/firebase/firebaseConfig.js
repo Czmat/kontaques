@@ -1,12 +1,12 @@
 const firebaseConfig = {
-  apiKey: 'AIzaSyAGe7bYQHvP1f5iCpZl6e0P0T_8DNJUuKo',
-  authDomain: 'kontaques-eb60e.firebaseapp.com',
-  databaseURL: 'https://kontaques-eb60e.firebaseio.com',
-  projectId: 'kontaques-eb60e',
-  storageBucket: 'kontaques-eb60e.appspot.com',
-  messagingSenderId: '1008979975986',
-  appId: '1:1008979975986:web:6cff4008d84310e211c12b',
-  measurementId: 'G-9XFBRJP6WH',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATA_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_SENDING_MESSENGER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 export default firebaseConfig;

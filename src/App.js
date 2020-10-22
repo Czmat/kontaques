@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -7,6 +7,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import Home from './pages/Home';
+import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 
