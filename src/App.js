@@ -7,6 +7,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import Home from './pages/Home';
+import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import { connect } from 'react-redux';
 import Dashboard from './pages/Dashboard';
@@ -23,6 +24,7 @@ function App() {
     <Provider store={store}>
       <Router>
         <div className="App">
+          <Header />
           <Switch>
             <Route exact path="/">
               <Home />

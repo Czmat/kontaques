@@ -1,0 +1,63 @@
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 1s linear infinite; /* Safari */
+  animation: spin 1s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* General display classes */
+.text-center{
+  text-align: center;
+}
+
+.display-i-b{
+  display: inline-block;
+}
+.display-flex{
+  display: flex;
+}
+.float-r{
+  float: right !important;
+}
+
+/* Navigation Header */
+
+.nav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: rgb(143, 143, 143);
+}
+
+.nav-list {
+  float: left;
+  display: flex;
+}
+
+.nav-list a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+.nav-list a:hover {
+  background-color: #111;
+}
