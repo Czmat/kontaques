@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import '../css/style.css';
 
 function Dashboard({ auth }) {
   let history = useHistory();
@@ -9,7 +10,7 @@ function Dashboard({ auth }) {
   if (auth.auth != true) {
     setTimeout(() => {
       history.push('/login');
-    }, 3000);
+    }, 1000);
   }
 
   return (
@@ -17,7 +18,9 @@ function Dashboard({ auth }) {
       {auth.auth ? (
         <div>Congratulations. This is the Dashboard. This is protected.</div>
       ) : (
-        <div>Sorry dude. Redirecting you now</div>
+        <div className="display-i-b">
+          <div className="loader"></div>
+        </div>
       )}
     </div>
   );
