@@ -1,10 +1,10 @@
 export default firebaseConfig = {
-  apiKey: 'AIzaSyAGe7bYQHvP1f5iCpZl6e0P0T_8DNJUuKo',
-  authDomain: 'kontaques-eb60e.firebaseapp.com',
-  databaseURL: 'https://kontaques-eb60e.firebaseio.com',
-  projectId: 'kontaques-eb60e',
-  storageBucket: 'kontaques-eb60e.appspot.com',
-  messagingSenderId: '1008979975986',
-  appId: '1:1008979975986:web:6cff4008d84310e211c12b',
-  measurementId: 'G-9XFBRJP6WH',
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATA_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_SENDING_MESSENGER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
