@@ -30,6 +30,7 @@ export async function init(script) {
       });
     });
   } else {
+    console.log('API NOT YET LOADED')
     setTimeout(() => {
       init(script);
     }, 100);
