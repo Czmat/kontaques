@@ -18,9 +18,40 @@ function LoginPage({ auth, dispatch }) {
       .auth()
       .setPersistence('local')
       .then(() => {
-        firebase.auth().signInWithPopup(provider);
+        firebase
+          .auth()
+          .signInWithPopup(provider)
+          .then((result) => {
+            //getting user and setting it to state
+            const user = result.user;
+            dispatch({ type: 'AUTH_USER', payload: user });
+            //function to create user if not exists
+            createCollectionUsers(user);
+          });
       });
   }
+
+  // create collection users if not created and add user
+  const createCollectionUsers = (user) => {
+    const db = firebase.firestore();
+    const usersCollection = db.collection('users');
+    const userDoc = usersCollection.doc(user.uid);
+
+    userDoc.get().then((doc) => {
+      if (!doc.exists) {
+        // console.log('my doc', doc);
+        userDoc.set({
+          username: user.displayName,
+          email: user.email,
+          phone: user.phoneNumber,
+          photoUrl: user.photoURL,
+          refreshToken: user.refreshToken,
+        });
+      } else {
+        return console.log('user exists');
+      }
+    });
+  };
 
   return (
     <div>
