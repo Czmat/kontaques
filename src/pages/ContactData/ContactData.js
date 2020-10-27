@@ -110,13 +110,13 @@ function ContactData() {
       isValid = value.length <= rules.maxLength && isValid;
     }
     if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
       isValid = pattern.test(value) && isValid;
     }
     if (rules.isPhone) {
-      const pattern = /(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}/;
+      const pattern = /(?:\(\d{3}\)|\d{3})[- ]?\d{3}[- ]?\d{4}$/;
       const trimmedValue = value.replace(/[^\d]/g, "");
-      isValid = pattern.test(value) && trimmedValue.length === 10 && isValid;
+      isValid = pattern.test(value) && trimmedValue.length <= 14 && isValid;
     }
     if (rules.isNumeric) {
       const pattern = /^\d+$/;
@@ -133,6 +133,7 @@ function ContactData() {
       ...updatedContactForm[inputIdentifier],
     };
     updatedFormElement.value = event.target.value;
+
     updatedFormElement.valid = checkValidity(
       updatedFormElement.value,
       updatedFormElement.validation
