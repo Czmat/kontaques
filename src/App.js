@@ -11,6 +11,7 @@ import Header from "./components/Header";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
 import { loadGmailApi } from "./gmail/Gmail";
+import ContactData from "./pages/ContactData/ContactData";
 
 function App() {
   useEffect(() => {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/dashboard">
             <Dashboard />
           </Route>
+          <Route path="/contact-data" component={ContactData} />
         </Switch>
       </div>
     </Router>

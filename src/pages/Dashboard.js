@@ -32,6 +32,10 @@ function Dashboard({ auth }) {
       });
   }
 
+  function goToContactData() {
+    history.push(`/contact-data`);
+  }
+
   if (auth.auth == null) {
     setTimeout(() => {
       history.push('/login');
@@ -43,6 +47,7 @@ function Dashboard({ auth }) {
         <div>
           Congratulations. This is the Dashboard. This is protected.
           <button onClick={sendEmail}>Send an email</button>
+          <button onClick={goToContactData}>Create Contact</button>
         </div>
       ) : (
         <div className="display-i-b">
