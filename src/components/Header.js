@@ -10,6 +10,7 @@ function Header({ auth, dispatch }) {
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        // console.log('user', user.providerData);
         dispatch({ type: 'AUTH_USER', payload: user });
       }
     });
@@ -27,12 +28,19 @@ function Header({ auth, dispatch }) {
         dispatch({ type: 'AUTH_USER', payload: null });
       });
   };
+
   return (
     <div className="nav">
       {auth.auth ? (
         <div className="nav-list">
           <a onClick={Logout}>Logout</a>
-          <p className="float-r">Welcome, User!</p>
+          <p className="float-r">
+            Welcome, {auth.auth.displayName}{' '}
+            <span>
+              <img src={auth.auth.photoURL} />
+            </span>
+            !
+          </p>
         </div>
       ) : (
         <div className="nav-list">
