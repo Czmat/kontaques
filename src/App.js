@@ -6,12 +6,10 @@ import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import { loadGmailApi } from './gmail/Gmail';
-import CreateContacts from './components/createContacts';
 import ContactData from './pages/ContactData/ContactData';
 import { connect } from 'react-redux';
 import firebase from './firebase/firebase';
-import ContactList from './components/ContactList';
-
+import SendEmail from './pages/SendEmail';
 function App({ auth, dispatch }) {
   const [redirect, setRedirect] = useState(false);
   useEffect(() => {
@@ -56,7 +54,6 @@ function App({ auth, dispatch }) {
             {auth.auth ? (
               <div>
                 <Dashboard />
-                <ContactList />
               </div>
             ) : (
               <div>
@@ -66,6 +63,13 @@ function App({ auth, dispatch }) {
           </Route>
           {auth.auth ? (
             <Route path="/contact-data" component={ContactData} />
+          ) : (
+            <div>
+              {redirect ? <LoginPage /> : <div className="loader"></div>}
+            </div>
+          )}
+          {auth.auth ? (
+            <Route path="/send" component={SendEmail} />
           ) : (
             <div>
               {redirect ? <LoginPage /> : <div className="loader"></div>}

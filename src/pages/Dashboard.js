@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import ContactList from '../components/ContactList';
 import '../css/style.css';
 
 function Dashboard({ auth }) {
   let history = useHistory();
   // console.log(auth.auth);
-
   function sendEmail() {
     console.log(window.gapi.auth2.getAuthInstance().isSignedIn.get());
     const message =
@@ -44,10 +44,15 @@ function Dashboard({ auth }) {
   return (
     <div>
       {auth.auth ? (
-        <div>
-          Congratulations. This is the Dashboard. This is protected.
-          <button onClick={sendEmail}>Send an email</button>
-          <button onClick={goToContactData}>Create Contact</button>
+        <div className="display-flex">
+          <div>
+            Congratulations. This is the Dashboard. This is protected.
+            <button onClick={sendEmail}>Send an email</button>
+            <button onClick={goToContactData}>Create Contact</button>
+          </div>
+          <div>
+            <ContactList />
+          </div>
         </div>
       ) : (
         <div className="display-i-b">
