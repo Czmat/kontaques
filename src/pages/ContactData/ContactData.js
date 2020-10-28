@@ -72,10 +72,10 @@ function ContactData({ auth, contacts, dispatch }) {
         .doc()
         .set({ ...contactData, id: contactCollection.doc().id })
         .then(() => {
-          console.log('Contact has been created');
+          // console.log('Contact has been created');
           contactCollection.get().then((snapshot) => {
             const data = snapshot.docs.map((d) => d.data());
-            console.log('snapshot', data);
+            // console.log('snapshot', data);
             dispatch({ type: 'GET_CONTACTS', payload: data });
           });
         });

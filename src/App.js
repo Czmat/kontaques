@@ -10,6 +10,7 @@ import CreateContacts from './components/createContacts';
 import ContactData from './pages/ContactData/ContactData';
 import { connect } from 'react-redux';
 import firebase from './firebase/firebase';
+import ContactList from './components/ContactList';
 
 function App({ auth, dispatch }) {
   const [redirect, setRedirect] = useState(false);
@@ -31,7 +32,7 @@ function App({ auth, dispatch }) {
 
     contactCollection.get().then((snapshot) => {
       const data = snapshot.docs.map((d) => d.data());
-      console.log('snapshot', data);
+      // console.log('snapshot', data);
       dispatch({ type: 'GET_CONTACTS', payload: data });
     });
   }
@@ -55,7 +56,7 @@ function App({ auth, dispatch }) {
             {auth.auth ? (
               <div>
                 <Dashboard />
-                <CreateContacts />
+                <ContactList />
               </div>
             ) : (
               <div>
