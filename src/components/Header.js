@@ -7,15 +7,6 @@ import firebase from '../firebase/firebase';
 function Header({ auth, dispatch }) {
   let history = useHistory();
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // console.log('user', user.providerData);
-        dispatch({ type: 'AUTH_USER', payload: user });
-      }
-    });
-  }, []);
-
   const Login = () => {
     history.push('/login');
   };
@@ -27,6 +18,7 @@ function Header({ auth, dispatch }) {
       .then(() => {
         dispatch({ type: 'AUTH_USER', payload: null });
       });
+    history.push('/');
   };
 
   return (
