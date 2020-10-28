@@ -17,13 +17,13 @@ const CreateContacts = ({ contacts, auth, dispatch }) => {
   // console.log('auth', auth.auth.uid);
   const [contact, setContact] = useState(initial_contact);
 
-  useEffect(() => {
-    contactCollection.get().then((snapshot) => {
-      const data = snapshot.docs.map((d) => d.data());
-      console.log('snapshot', data);
-      dispatch({ type: 'GET_CONTACTS', payload: data });
-    });
-  }, []);
+  // useEffect(() => {
+  //   contactCollection.get().then((snapshot) => {
+  //     const data = snapshot.docs.map((d) => d.data());
+  //     console.log('snapshot', data);
+  //     dispatch({ type: 'GET_CONTACTS', payload: data });
+  //   });
+  // }, []);
 
   const contactCollection = firebase
     .firestore()
