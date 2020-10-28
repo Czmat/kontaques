@@ -23,6 +23,19 @@ function App({ auth, dispatch }) {
     });
   }, []);
 
+  // to load contact data at as soon as we have a user logged in
+  if (auth.auth) {
+    const contactCollection = firebase
+      .firestore()
+      .collection(`users/${auth.auth.uid}/contacts`);
+
+    contactCollection.get().then((snapshot) => {
+      const data = snapshot.docs.map((d) => d.data());
+      console.log('snapshot', data);
+      dispatch({ type: 'GET_CONTACTS', payload: data });
+    });
+  }
+
   setTimeout(() => {
     setRedirect(true);
   }, 3000);
@@ -50,7 +63,13 @@ function App({ auth, dispatch }) {
               </div>
             )}
           </Route>
-          <Route path="/contact-data" component={ContactData} />
+          {auth.auth ? (
+            <Route path="/contact-data" component={ContactData} />
+          ) : (
+            <div>
+              {redirect ? <LoginPage /> : <div className="loader"></div>}
+            </div>
+          )}
         </Switch>
       </div>
     </Router>
