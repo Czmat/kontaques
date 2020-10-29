@@ -7,30 +7,6 @@ import '../css/style.css';
 function Dashboard({ auth }) {
   let history = useHistory();
   // console.log(auth.auth);
-  function sendEmail() {
-    console.log(window.gapi.auth2.getAuthInstance().isSignedIn.get());
-    const message =
-      `From: danielmamnev@gmail.com.\r\n` +
-      `To: daniksk9@gmail.com\r\n` +
-      `Subject: test1\r\n\r\n` +
-      `test body`;
-    const encodedMessage = btoa(message);
-    const reallyEncodedMessage = encodedMessage
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
-      .replace(/=+$/, '');
-
-    window.gapi.client.gmail.users.messages
-      .send({
-        userId: 'me',
-        resource: {
-          raw: reallyEncodedMessage,
-        },
-      })
-      .then(() => {
-        console.log('email sent');
-      });
-  }
 
   function goToContactData() {
     history.push(`/contact-data`);
@@ -46,8 +22,6 @@ function Dashboard({ auth }) {
       {auth.auth ? (
         <div className="display-flex">
           <div>
-            Congratulations. This is the Dashboard. This is protected.
-            <button onClick={sendEmail}>Send an email</button>
             <button onClick={goToContactData}>Create Contact</button>
           </div>
           <div>
