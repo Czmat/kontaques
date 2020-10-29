@@ -19,9 +19,9 @@ const ContactList = ({ auth, contacts, dispatch }) => {
       <h4>My contacts</h4>
       <ul>
         <div>
-          {contacts.contacts.map((contact) => {
+          {contacts.contacts.map((contact, i) => {
             return (
-              <div>
+              <div key={i}>
                 <input
                   style={{ display: 'inline-block' }}
                   type="checkbox"
