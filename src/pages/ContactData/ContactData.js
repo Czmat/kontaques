@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './ContactData.module.css';
 import Input from '../../components/UI/Input/Input';
-import formConfig from './form.config';
+import { formConfig } from './form.config';
 import checkValidity from './validationRules';
 import firebase from '../../firebase/firebase';
 import { connect } from 'react-redux';
@@ -64,21 +64,17 @@ function ContactData({ auth, contacts, dispatch }) {
   const contactCollection = firebase
     .firestore()
     .collection(`users/${auth.auth.uid}/contacts`);
-
   // function to create contact
   const createContactInFirestore = (contactData) => {
     if (!contactData.imgUrl) {
-      contactCollection
-        .doc()
-        .set({ ...contactData, id: contactCollection.doc().id })
-        .then(() => {
-          // console.log('Contact has been created');
-          contactCollection.get().then((snapshot) => {
-            const data = snapshot.docs.map((d) => d.data());
-            // console.log('snapshot', data);
-            dispatch({ type: 'GET_CONTACTS', payload: data });
-          });
+      const ref = contactCollection.doc();
+      ref.set({ ...contactData, id: ref.id }).then(() => {
+        console.log('Contact has been created');
+        contactCollection.get().then((snapshot) => {
+          const data = snapshot.docs.map((d) => d.data());
+          dispatch({ type: 'GET_CONTACTS', payload: data });
         });
+      });
     }
   };
 

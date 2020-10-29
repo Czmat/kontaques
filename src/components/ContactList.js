@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from '../pages/ContactData/ContactData.module.css';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router';
 
-const ContactList = ({ auth, contacts, dispatch }) => {
+const ContactList = ({ updateContact, contacts, dispatch }) => {
+  let history = useHistory();
+
+  function goToUpdateContact() {
+    history.push(`/update-contact`);
+  }
+
   const addContact = (e, contactData) => {
     if (e.target.checked === true) {
       dispatch({ type: 'SELECT_CONTACT', payload: contactData });
@@ -12,6 +19,11 @@ const ContactList = ({ auth, contacts, dispatch }) => {
       );
       dispatch({ type: 'UNSELECT_CONTACT', payload: filteredContacts });
     }
+  };
+
+  const editContact = (contactToUpdate) => {
+    dispatch({ type: 'UPDATE_CONTACT', payload: contactToUpdate });
+    goToUpdateContact();
   };
 
   return (
@@ -28,10 +40,12 @@ const ContactList = ({ auth, contacts, dispatch }) => {
                   name="check"
                   onChange={(e) => addContact(e, contact)}
                 />
-                {'  '}
+                {'    '}
                 <li style={{ display: 'inline-block' }} key={contact.id}>
                   {contact.firstName}
                 </li>
+                {'    '}
+                <button onClick={(e) => editContact(contact)}>Update</button>
               </div>
             );
           })}
@@ -44,6 +58,7 @@ const ContactList = ({ auth, contacts, dispatch }) => {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   contacts: state.contacts,
+  updateContact: state.contacts.updateContact,
 });
 
 export default connect(mapStateToProps)(ContactList);

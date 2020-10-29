@@ -146,4 +146,4 @@ const formConfig = {
   formIsValid: false,
 };
 
-export default formConfig;
+export { formConfig };
