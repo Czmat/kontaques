@@ -11,6 +11,7 @@ import ContactData from './pages/ContactData/ContactData';
 import { connect } from 'react-redux';
 import firebase from './firebase/firebase';
 import ContactList from './components/ContactList';
+import UpdateContact from './pages/ContactData/UpdateContact';
 
 function App({ auth, dispatch }) {
   const [redirect, setRedirect] = useState(false);
@@ -57,6 +58,7 @@ function App({ auth, dispatch }) {
               <div>
                 <Dashboard />
                 <ContactList />
+                {/* <UpdateContact /> */}
               </div>
             ) : (
               <div>
@@ -65,7 +67,10 @@ function App({ auth, dispatch }) {
             )}
           </Route>
           {auth.auth ? (
-            <Route path="/contact-data" component={ContactData} />
+            <div>
+              <Route path="/contact-data" component={ContactData} />
+              <Route path="/update-contact" component={UpdateContact} />
+            </div>
           ) : (
             <div>
               {redirect ? <LoginPage /> : <div className="loader"></div>}

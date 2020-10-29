@@ -1,4 +1,7 @@
-export default (state = { contacts: [], selectedContacts: [] }, action) => {
+export default (
+  state = { contacts: [], selectedContacts: [], updateContact: '' },
+  action
+) => {
   switch (action.type) {
     case 'CREATE_CONTACT':
       return { ...state, contacts: [...state.contacts, action.payload] };
@@ -13,6 +16,11 @@ export default (state = { contacts: [], selectedContacts: [] }, action) => {
       return {
         ...state,
         selectedContacts: action.payload,
+      };
+    case 'UPDATE_CONTACT':
+      return {
+        ...state,
+        updateContact: action.payload,
       };
     default:
       return state;
