@@ -1,5 +1,5 @@
 let result;
-let trim;
+let trim = '';
 
 export default function templateEmail(contact, body) {
   var splitString = body.split(' ');
@@ -19,7 +19,8 @@ export default function templateEmail(contact, body) {
         }
         if (s[s.length - 1] == '%') {
           let attribute = s.replace(/%/g, '');
-          if (index > 0) {
+
+          if (index > -1) {
             if (contact[attribute]) {
               let newWord = contact[attribute].concat(trim);
               splitString.splice(index, 1, newWord);
