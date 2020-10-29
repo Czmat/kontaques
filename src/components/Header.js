@@ -29,10 +29,12 @@ function Header({ auth, dispatch }) {
           <p className="float-r">
             Welcome, {auth.auth.displayName}{' '}
             <span>
-              <img src={auth.auth.photoURL} />
+              <img width="30" height="30" src={auth.auth.photoURL} />
             </span>
             !
           </p>
+          <button onClick={() => history.push('/dashboard')}>Dashboard</button>
+          <button onClick={() => history.push('/send')}>Send an Email</button>
         </div>
       ) : (
         <div className="nav-list">
