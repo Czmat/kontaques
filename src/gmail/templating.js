@@ -8,12 +8,7 @@ export default function templateEmail(contact, body) {
     splitString.forEach((s) => {
       if (s[0] == '%') {
         const index = splitString.indexOf(s);
-        if (
-          s[s.length - 1] == ',' ||
-          s[s.length - 1] == '!' ||
-          s[s.length - 1] == '?' ||
-          s[s.length - 1] == '"'
-        ) {
+        if (s[s.length - 1] == ',' || '!' || '.' || '?' || '"') {
           trim = s[s.length - 1];
           s = s.replace(/[!?,"]/g, '');
         }
@@ -34,5 +29,6 @@ export default function templateEmail(contact, body) {
   })();
 
   result = splitString.join(' ');
+  console.log('result', result);
 }
 export { result };
