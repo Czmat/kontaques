@@ -64,23 +64,37 @@ function App({ auth, dispatch }) {
               </div>
             )}
           </Route>
-          {auth.auth ? (
-            <div>
-              <Route path="/contact-data" component={ContactData} />
-              <Route path="/update-contact" component={UpdateContact} />
-            </div>
-          ) : (
-            <div>
-              {redirect ? <LoginPage /> : <div className="loader"></div>}
-            </div>
-          )}
-          {auth.auth ? (
-            <Route path="/send" component={SendEmail} />
-          ) : (
-            <div>
-              {redirect ? <LoginPage /> : <div className="loader"></div>}
-            </div>
-          )}
+          <Route path="/contact-data">
+            {auth.auth ? (
+              <div>
+                <ContactData />
+              </div>
+            ) : (
+              <div>
+                {redirect ? <LoginPage /> : <div className="loader"></div>}
+              </div>
+            )}
+          </Route>
+          <Route path="/update-contact">
+            {auth.auth ? (
+              <div>
+                <UpdateContact />
+              </div>
+            ) : (
+              <div>
+                {redirect ? <LoginPage /> : <div className="loader"></div>}
+              </div>
+            )}
+          </Route>
+          <Route path="/send">
+            {auth.auth ? (
+              <SendEmail />
+            ) : (
+              <div>
+                {redirect ? <LoginPage /> : <div className="loader"></div>}
+              </div>
+            )}
+          </Route>
         </Switch>
       </div>
     </Router>
