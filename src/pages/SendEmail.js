@@ -24,6 +24,8 @@ function SendEmail({ auth, selected }) {
         .replace(/\//g, '_')
         .replace(/=+$/, '');
 
+      console.log('message', message);
+
       window.gapi.client.gmail.users.messages
         .send({
           userId: 'me',
