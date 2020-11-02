@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import firebase, { signIn } from '../firebase/firebase';
 
@@ -28,7 +28,6 @@ function LoginPage({ auth, dispatch }) {
   }
 
   let history = useHistory();
-  let location = useLocation();
 
   if (auth.auth) {
     history.push('/dashboard');
@@ -36,18 +35,14 @@ function LoginPage({ auth, dispatch }) {
   function loginHandler() {
     firebase
       .auth()
-      .setPersistence('local')
-      .then(() => {
-        firebase
-          .auth()
-          .signInWithPopup(provider)
-          .then((result) => {
-            //getting user and setting it to state
-            const user = result.user;
-            dispatch({ type: 'AUTH_USER', payload: user });
-            //function to create user if not exists
-            createCollectionUsers(user);
-          });
+      .signInWithPopup(provider)
+      .then((result) => {
+        //getting user and setting it to state
+        const user = result.user;
+        dispatch({ type: 'AUTH_USER', payload: user });
+        //function to create user if not exists
+        createCollectionUsers(user);
+        window.location.reload(false);
       });
   }
 
