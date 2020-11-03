@@ -30,16 +30,16 @@ function SendEmail({ auth, selected }) {
 
       console.log('message', message);
 
-      // window.gapi.client.gmail.users.messages
-      //   .send({
-      //     userId: 'me',
-      //     resource: {
-      //       raw: reallyEncodedMessage,
-      //     },
-      //   })
-      //   .then(() => {
-      //     console.log('email sent');
-      //   });
+      window.gapi.client.gmail.users.messages
+        .send({
+          userId: 'me',
+          resource: {
+            raw: reallyEncodedMessage,
+          },
+        })
+        .then(() => {
+          console.log('email sent');
+        });
     });
   }
 
@@ -55,7 +55,7 @@ function SendEmail({ auth, selected }) {
                 const newKey = `%${key}.${nestedKey}%`;
                 setEmailContent({
                   ...emailContent,
-                  subject: emailContent.subject + newKey,
+                  subject: emailContent.subject + ' ' + newKey,
                 });
               }}
             >
@@ -68,7 +68,7 @@ function SendEmail({ auth, selected }) {
                 const newKey = `%${key}.${nestedKey}%`;
                 setEmailContent({
                   ...emailContent,
-                  body: emailContent.body + newKey,
+                  body: emailContent.body + ' ' + newKey,
                 });
               }}
             >
@@ -83,7 +83,7 @@ function SendEmail({ auth, selected }) {
               const newKey = `%${key}%`;
               setEmailContent({
                 ...emailContent,
-                subject: emailContent.subject + newKey,
+                subject: emailContent.subject + ' ' + newKey,
               });
             }}
           >
@@ -96,7 +96,7 @@ function SendEmail({ auth, selected }) {
               const newKey = `%${key}%`;
               setEmailContent({
                 ...emailContent,
-                body: emailContent.body + newKey,
+                body: emailContent.body + ' ' + newKey,
               });
             }}
           >
@@ -107,14 +107,14 @@ function SendEmail({ auth, selected }) {
     });
   }
 
-  if (selected[0]) {
-    console.log(Object.keys(selected[0]));
-    Object.keys(selected[0]).forEach((nk) => {
-      if (typeof selected[0][nk] == 'object') {
-        console.log(selected[0][nk]);
-      }
-    });
-  }
+  // if (selected[0]) {
+  //   console.log(Object.keys(selected[0]));
+  //   Object.keys(selected[0]).forEach((nk) => {
+  //     if (typeof selected[0][nk] == 'object') {
+  //       console.log(selected[0][nk]);
+  //     }
+  //   });
+  // }
   return (
     <div className="text-center">
       {selected.map((s, i) => (
