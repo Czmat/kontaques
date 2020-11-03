@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 function ContactData({ auth, contacts, dispatch }) {
   const [contactData, setContactData] = useState(formConfig);
+  // console.log('contact data', contactData);
 
   function inputChangedHandler(event, inputIdentifier) {
     const updatedContactForm = {
@@ -17,6 +18,13 @@ function ContactData({ auth, contacts, dispatch }) {
       ...updatedContactForm[inputIdentifier],
     };
     updatedFormElement.value = event.target.value;
+
+    // add photo to contact data as photoFile
+    const photoFile = event.target.files;
+    if (photoFile && photoFile.length > 0) {
+      console.log('e.file', event.target.files[0]);
+      updatedFormElement.photoFile = photoFile[0];
+    }
 
     updatedFormElement.valid = checkValidity(
       updatedFormElement.value,
@@ -40,11 +48,44 @@ function ContactData({ auth, contacts, dispatch }) {
     const contactForm = {};
     const addressKeys = ['street_address', 'city', 'state', 'zipCode'];
     const addressObj = {};
+    const photoUrl = {};
     for (let formElementIdentifier in contactData.contactForm) {
       if (addressKeys.includes(formElementIdentifier)) {
         addressObj[formElementIdentifier] =
           contactData.contactForm[formElementIdentifier].value;
+      } else if (formElementIdentifier === 'photoFile') {
+        console.log(
+          'form identifier should be photoFile ===',
+          formElementIdentifier
+        );
+        const photoUpload =
+          contactData.contactForm[formElementIdentifier].photoFile;
+        console.log(
+          'photo file',
+          contactData.contactForm[formElementIdentifier].photoFile
+        );
+        if (photoUpload) {
+          contactForm[formElementIdentifier] = photoUpload;
+        }
+
+        // // upload photo and get url
+        // firebase
+        //   .storage()
+        //   .ref(photoUpload.name)
+        //   .put(photoUpload)
+        //   .then(function (snapshot) {
+        //     console.log('Photo Uploaded!');
+        //     firebase
+        //       .storage()
+        //       .ref(photoUpload.name)
+        //       .getDownloadURL()
+        //       .then((url) => {
+        //         photoUrl.url = url;
+        //         console.log('url is: ', url);
+        //       });
+        //   });
       } else {
+        console.log('contact form', formElementIdentifier);
         contactForm[formElementIdentifier] =
           contactData.contactForm[formElementIdentifier].value;
       }
@@ -66,7 +107,8 @@ function ContactData({ auth, contacts, dispatch }) {
     .collection(`users/${auth.auth.uid}/contacts`);
   // function to create contact
   const createContactInFirestore = (contactData) => {
-    if (!contactData.imgUrl) {
+    const photoFile = contactData.photoFile;
+    if (!photoFile) {
       const ref = contactCollection.doc();
       ref.set({ ...contactData, id: ref.id }).then(() => {
         console.log('Contact has been created');
@@ -75,6 +117,39 @@ function ContactData({ auth, contacts, dispatch }) {
           dispatch({ type: 'GET_CONTACTS', payload: data });
         });
       });
+    } else {
+      // upload photo and get url
+      firebase
+        .storage()
+        .ref(photoFile.name)
+        .put(photoFile)
+        .then(function (snapshot) {
+          console.log('Photo Uploaded!');
+          firebase
+            .storage()
+            .ref(photoFile.name)
+            .getDownloadURL()
+            .then((url) => {
+              console.log('url is: ', url);
+
+              const ref = contactCollection.doc();
+              //update contact data with photo url and id using fb id
+              const updatedContactData = {
+                ...contactData,
+                id: ref.id,
+                photoFile: url,
+              };
+
+              ref.set(updatedContactData).then(() => {
+                console.log('Contact has been created');
+                contactCollection.get().then((snapshot) => {
+                  const data = snapshot.docs.map((d) => d.data());
+                  dispatch({ type: 'GET_CONTACTS', payload: data });
+                });
+              });
+              setContactData(formConfig);
+            });
+        });
     }
   };
 
@@ -111,7 +186,16 @@ function ContactData({ auth, contacts, dispatch }) {
       <h4>My contacts</h4>
       <ul>
         {contacts.contacts.map((contact) => {
-          return <li key={contact.id}>{contact.firstName}</li>;
+          return (
+            <div>
+              <li key={contact.id}>{contact.firstName}</li>
+              {contact.photoFile ? (
+                <img src={contact.photoFile} alt={contact.photoFile} />
+              ) : (
+                'no photo'
+              )}
+            </div>
+          );
         })}
       </ul>
     </div>
