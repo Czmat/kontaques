@@ -128,12 +128,24 @@ const formConfig = {
       touched: false,
       errorMsg: 'Please enter a 5 digit numeric zip code',
     },
-
     description: {
       elementType: 'textarea',
       elementConfig: {
         type: 'text',
         placeholder: 'Enter some notes..',
+      },
+      value: '',
+      validation: {
+        required: false,
+      },
+      valid: true,
+      touched: false,
+    },
+    photoFile: {
+      elementType: 'input',
+      elementConfig: {
+        type: 'file',
+        accept: 'image/*',
       },
       value: '',
       validation: {
