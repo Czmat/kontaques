@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
-import Header from './components/Header';
+import Header from './components/UI/Header/Header';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import { loadGmailApi } from './gmail/Gmail';
@@ -44,54 +44,54 @@ function App({ auth, dispatch }) {
 
   return (
     <Router>
-      <div className="App">
+      <div className='App'>
         <Header />
         <Switch>
-          <Route exact path="/">
+          <Route exact path='/'>
             <Home />
           </Route>
-          <Route path="/login">
+          <Route path='/login'>
             <LoginPage />
           </Route>
-          <Route path="/dashboard">
+          <Route path='/dashboard'>
             {auth.auth ? (
-              <div>
+              <div class='main'>
                 <Dashboard />
               </div>
             ) : (
               <div>
-                {redirect ? <LoginPage /> : <div className="loader"></div>}
+                {redirect ? <LoginPage /> : <div className='loader'></div>}
               </div>
             )}
           </Route>
-          <Route path="/contact-data">
+          <Route path='/contact-data'>
             {auth.auth ? (
-              <div>
+              <div class='main'>
                 <ContactData />
               </div>
             ) : (
               <div>
-                {redirect ? <LoginPage /> : <div className="loader"></div>}
+                {redirect ? <LoginPage /> : <div className='loader'></div>}
               </div>
             )}
           </Route>
-          <Route path="/update-contact">
+          <Route path='/update-contact'>
             {auth.auth ? (
-              <div>
+              <div class='main'>
                 <UpdateContact />
               </div>
             ) : (
               <div>
-                {redirect ? <LoginPage /> : <div className="loader"></div>}
+                {redirect ? <LoginPage /> : <div className='loader'></div>}
               </div>
             )}
           </Route>
-          <Route path="/send">
+          <Route path='/send'>
             {auth.auth ? (
               <SendEmail />
             ) : (
               <div>
-                {redirect ? <LoginPage /> : <div className="loader"></div>}
+                {redirect ? <LoginPage /> : <div className='loader'></div>}
               </div>
             )}
           </Route>

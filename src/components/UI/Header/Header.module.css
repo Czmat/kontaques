@@ -1,0 +1,85 @@
+.main_header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgb(143, 143, 143);
+  padding: 0.5rem 1rem;
+  z-index: 1;
+}
+
+.main_header__welcome {
+  min-width: 292px;
+  height: 3rem;
+}
+
+.main_header div div {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.main_header__img {
+  height: 100%;
+  width: 3rem;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  margin: 0 0.5rem;
+}
+
+.main_nav {
+  display: none;
+}
+
+.main_nav__items {
+  min-width: 330px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.main_nav__item {
+  display: inline-block;
+  margin: 0 1rem;
+  cursor: pointer;
+}
+
+.main_nav__item a:hover,
+.main_nav__item a:active {
+  color: white;
+}
+
+.toggle_button {
+  width: 2.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding-top: 0;
+  padding-bottom: 0;
+  vertical-align: middle;
+}
+
+.toggle_button:focus {
+  outline: none;
+}
+
+.toggle_button__bar {
+  width: 100%;
+  height: 0.2rem;
+  background: black;
+  display: block;
+  margin: 0.6rem 0;
+}
+
+@media (min-width: 40rem) {
+  .toggle_button {
+    display: none;
+  }
+
+  .main_nav {
+    display: inline-block;
+    text-align: right;
+    width: calc(100% - 292px);
+    vertical-align: middle;
+  }
+}
