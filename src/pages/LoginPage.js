@@ -7,7 +7,6 @@ const provider = new firebase.auth.GoogleAuthProvider();
 provider.addScope('https://mail.google.com/');
 
 function LoginPage({ auth, dispatch }) {
-  //chaises comment
   if (auth.auth) {
     const contactCollection = firebase
       .firestore()
