@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import templateEmail, {
   templatedBody,
   templatedSubject,
 } from '../gmail/templating';
+
+import firebase from '../firebase/firebase';
+import { isCompositeComponent } from 'react-dom/test-utils';
+
+
 function SendEmail({ auth, selected }) {
   const [emailContent, setEmailContent] = useState({ subject: '', body: '' });
+  const [show, setShow] = useState(false);
   const onChange = (e) => {
     e.preventDefault();
     setEmailContent({ ...emailContent, [e.target.name]: e.target.value });
@@ -107,14 +113,51 @@ function SendEmail({ auth, selected }) {
     });
   }
 
-  // if (selected[0]) {
-  //   console.log(Object.keys(selected[0]));
-  //   Object.keys(selected[0]).forEach((nk) => {
-  //     if (typeof selected[0][nk] == 'object') {
-  //       console.log(selected[0][nk]);
-  //     }
-  //   });
-  // }
+  let tempName;
+  let templates = [];
+
+  function saveTemplate() {
+    if (tempName) {
+      firebase
+        .firestore()
+        .collection(`users/${auth.auth.uid}/templates/`)
+        .doc(tempName)
+        .set(emailContent);
+    } else {
+      console.log('template needs a name!');
+    }
+  }
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection(`users/${auth.auth.uid}/templates/`)
+      .get()
+      .then((snapshot) => {
+        snapshot.docs.map((d) => {
+          d.data();
+          templates.push(
+            d.data()
+            // <button
+            //   onClick={() =>
+            //     setEmailContent({
+            //       ...emailContent,
+            //       subject: d.data().subject,
+            //       body: d.data().body,
+            //     })
+            //   }
+            // >
+            //   balls
+            // </button>
+          );
+          console.log(templates);
+        });
+      });
+  }, []);
+
+
+
+
   return (
     <div className="text-center">
       {selected.map((s, i) => (
@@ -138,11 +181,38 @@ function SendEmail({ auth, selected }) {
           onChange={onChange}
           value={emailContent.body}
         />
-        <div>{selected[0] ? <div>{bodyButtons}</div> : <div></div>}</div>
+
+        {selected[0] ? <div>{bodyButtons}</div> : <div></div>}
+
         <br />
         <br />
 
         <button onClick={sendEmail}>Send Email</button>
+        <br />
+
+        {show ? (
+          <div>
+            <label>Template Name</label>
+            <input
+              type="text"
+              name="templateName"
+              onChange={(e) => {
+                tempName = e.target.value;
+              }}
+            ></input>
+            <button onClick={saveTemplate}>Save Template</button>
+          </div>
+        ) : (
+          <div>
+            <button
+              onClick={() => {
+                setShow(true);
+              }}
+            >
+              Save Template
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
