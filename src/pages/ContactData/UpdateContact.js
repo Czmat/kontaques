@@ -189,7 +189,6 @@ function UpdateContact({ auth, updateContact, dispatch }) {
     // add photo to contact data as photoFile
     const photoFile = event.target.files;
     if (photoFile && photoFile.length > 0) {
-      console.log('e.file', event.target.files[0]);
       updatedFormElement.photoFile = photoFile[0];
     }
 
@@ -220,16 +219,8 @@ function UpdateContact({ auth, updateContact, dispatch }) {
         addressObj[formElementIdentifier] =
           contactData.contactForm[formElementIdentifier].value;
       } else if (formElementIdentifier === 'photoFile') {
-        console.log(
-          'form identifier should be photoFile ===',
-          formElementIdentifier
-        );
         const photoUpload =
           contactData.contactForm[formElementIdentifier].photoFile;
-        console.log(
-          'photo file',
-          contactData.contactForm[formElementIdentifier].photoFile
-        );
         if (photoUpload) {
           contactForm[formElementIdentifier] = photoUpload;
         }
@@ -244,12 +235,13 @@ function UpdateContact({ auth, updateContact, dispatch }) {
       address: addressObj,
     };
     // Post contactForm to firebase
-    // console.log('form', handledFormData);
+    console.log('handle form data', handledFormData);
     // calling update contact function on submit
     updateContactInFirestore(handledFormData);
   }
 
-  // firebase contact collection for signed in user
+  // ********** firebase variables ***********
+  const storage = firebase.storage();
   const contactCollection = firebase
     .firestore()
     .collection(`users/${auth.auth.uid}/contacts`);
@@ -270,9 +262,15 @@ function UpdateContact({ auth, updateContact, dispatch }) {
             goToDashboard();
           });
         });
+      // delete image: if contact had image and didn't select a new one
+      if (updateContact.photoFile) {
+        const imgToDelete = storage.refFromURL(updateContact.photoFile);
+        imgToDelete
+          .delete()
+          .then(() => console.log('old image deleted successfully'));
+      }
     } else {
-      // upload photo and get url
-      const storage = firebase.storage();
+      // upload image and get url to store in contact
       const storageRef = storage.ref();
       storageRef
         .child(photoFile.name)
@@ -305,19 +303,15 @@ function UpdateContact({ auth, updateContact, dispatch }) {
                 });
             });
         });
-      // const imgToDelete = storage.refFromURL(contactDataToUpdate.photoFile);
-      // console.log(
-      //   'first old img second imgToDelete',
-      //   contactDataToUpdate.photoFile,
-      //   imgToDelete
-      // );
-      // imgToDelete
-      //   .delete()
-      //   .then(() => console.log('old image deleted successfully'));
+      if (updateContact.photoFile) {
+        const imgToDelete = storage.refFromURL(updateContact.photoFile);
+        imgToDelete
+          .delete()
+          .then(() => console.log('Previous image deleted successfully'));
+      }
     }
   };
   const deleteContact = () => {
-    console.log('delete button');
     contactCollection
       .doc(updateContact.id)
       .delete()
@@ -329,6 +323,15 @@ function UpdateContact({ auth, updateContact, dispatch }) {
       dispatch({ type: 'GET_CONTACTS', payload: data });
       goToDashboard();
     });
+
+    // if photo exists for contact
+    if (updateContact.photoFile) {
+      const imgToDelete = storage.refFromURL(updateContact.photoFile);
+
+      imgToDelete
+        .delete()
+        .then(() => console.log('old image deleted successfully'));
+    }
   };
 
   const formElementsArray = [];
