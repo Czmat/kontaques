@@ -4,8 +4,11 @@ import templateEmail, {
   templatedBody,
   templatedSubject,
 } from '../gmail/templating';
+
 import firebase from '../firebase/firebase';
 import { isCompositeComponent } from 'react-dom/test-utils';
+
+
 function SendEmail({ auth, selected }) {
   const [emailContent, setEmailContent] = useState({ subject: '', body: '' });
   const [show, setShow] = useState(false);
@@ -109,6 +112,7 @@ function SendEmail({ auth, selected }) {
       }
     });
   }
+
   let tempName;
   let templates = [];
 
@@ -151,6 +155,9 @@ function SendEmail({ auth, selected }) {
       });
   }, []);
 
+
+
+
   return (
     <div className="text-center">
       {selected.map((s, i) => (
@@ -174,7 +181,9 @@ function SendEmail({ auth, selected }) {
           onChange={onChange}
           value={emailContent.body}
         />
+
         {selected[0] ? <div>{bodyButtons}</div> : <div></div>}
+
         <br />
         <br />
 

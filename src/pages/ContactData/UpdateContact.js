@@ -137,7 +137,6 @@ function UpdateContact({ auth, updateContact, dispatch }) {
         touched: false,
         errorMsg: 'Please enter a 5 digit numeric zip code',
       },
-
       description: {
         elementType: 'textarea',
         elementConfig: {
@@ -145,6 +144,19 @@ function UpdateContact({ auth, updateContact, dispatch }) {
           placeholder: 'Enter some notes..',
         },
         value: updateContact.description,
+        validation: {
+          required: false,
+        },
+        valid: true,
+        touched: false,
+      },
+      photoFile: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'file',
+          accept: 'image/*',
+        },
+        value: '',
         validation: {
           required: false,
         },
@@ -174,6 +186,13 @@ function UpdateContact({ auth, updateContact, dispatch }) {
     };
     updatedFormElement.value = event.target.value;
 
+    // add photo to contact data as photoFile
+    const photoFile = event.target.files;
+    if (photoFile && photoFile.length > 0) {
+      console.log('e.file', event.target.files[0]);
+      updatedFormElement.photoFile = photoFile[0];
+    }
+
     updatedFormElement.valid = checkValidity(
       updatedFormElement.value,
       updatedFormElement.validation
@@ -200,6 +219,20 @@ function UpdateContact({ auth, updateContact, dispatch }) {
       if (addressKeys.includes(formElementIdentifier)) {
         addressObj[formElementIdentifier] =
           contactData.contactForm[formElementIdentifier].value;
+      } else if (formElementIdentifier === 'photoFile') {
+        console.log(
+          'form identifier should be photoFile ===',
+          formElementIdentifier
+        );
+        const photoUpload =
+          contactData.contactForm[formElementIdentifier].photoFile;
+        console.log(
+          'photo file',
+          contactData.contactForm[formElementIdentifier].photoFile
+        );
+        if (photoUpload) {
+          contactForm[formElementIdentifier] = photoUpload;
+        }
       } else {
         contactForm[formElementIdentifier] =
           contactData.contactForm[formElementIdentifier].value;
@@ -223,7 +256,9 @@ function UpdateContact({ auth, updateContact, dispatch }) {
 
   // function to update contact
   const updateContactInFirestore = (contactDataToUpdate) => {
-    if (!contactData.imgUrl) {
+    // need to figure out how to change or delete photo
+    const photoFile = contactDataToUpdate.photoFile;
+    if (!photoFile) {
       contactCollection
         .doc(updateContact.id)
         .set({ ...contactDataToUpdate, id: updateContact.id })
@@ -235,6 +270,50 @@ function UpdateContact({ auth, updateContact, dispatch }) {
             goToDashboard();
           });
         });
+    } else {
+      // upload photo and get url
+      const storage = firebase.storage();
+      const storageRef = storage.ref();
+      storageRef
+        .child(photoFile.name)
+        .put(photoFile)
+        .then(function (snapshot) {
+          console.log('Photo Uploaded!');
+          storageRef
+            .child(photoFile.name)
+            .getDownloadURL()
+            .then((url) => {
+              console.log('url is: ', url);
+
+              //update contact data with photo url and id using fb id
+              const updatedContactData = {
+                ...contactDataToUpdate,
+                id: updateContact.id,
+                photoFile: url,
+              };
+
+              contactCollection
+                .doc(updateContact.id)
+                .set(updatedContactData)
+                .then(() => {
+                  console.log('Contact has been updated');
+                  contactCollection.get().then((snapshot) => {
+                    const data = snapshot.docs.map((d) => d.data());
+                    dispatch({ type: 'GET_CONTACTS', payload: data });
+                    goToDashboard();
+                  });
+                });
+            });
+        });
+      // const imgToDelete = storage.refFromURL(contactDataToUpdate.photoFile);
+      // console.log(
+      //   'first old img second imgToDelete',
+      //   contactDataToUpdate.photoFile,
+      //   imgToDelete
+      // );
+      // imgToDelete
+      //   .delete()
+      //   .then(() => console.log('old image deleted successfully'));
     }
   };
   const deleteContact = () => {
@@ -275,6 +354,12 @@ function UpdateContact({ auth, updateContact, dispatch }) {
           error={formElement.config.errorMsg}
         />
       ))}
+
+      {updateContact.photoFile ? (
+        <img src={updateContact.photoFile} alt={updateContact.photoFile}></img>
+      ) : (
+        'Consider adding photo'
+      )}
       <button disabled={contactData.formIsValid}>Update Contact</button>
     </form>
   );
@@ -282,6 +367,7 @@ function UpdateContact({ auth, updateContact, dispatch }) {
     <div className={styles.ContactData}>
       <h4>Enter you Contact Data</h4>
       {form}
+
       <button onClick={deleteContact}>Delete</button>
     </div>
   );

@@ -45,6 +45,12 @@ const ContactList = ({ updateContact, contacts, dispatch }) => {
                   {contact.firstName}
                 </li>
                 {'    '}
+                {contact.photoFile ? (
+                  <img src={contact.photoFile} alt={contact.photoFile} />
+                ) : (
+                  'no photo'
+                )}
+                {'    '}
                 <button onClick={(e) => editContact(contact)}>Update</button>
               </div>
             );
