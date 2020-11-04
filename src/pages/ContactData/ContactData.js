@@ -5,10 +5,16 @@ import { formConfig } from './form.config';
 import checkValidity from './validationRules';
 import firebase from '../../firebase/firebase';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router';
 
 function ContactData({ auth, contacts, dispatch }) {
   const [contactData, setContactData] = useState(formConfig);
-  // console.log('contact data', contactData);
+  // redirect dashboard
+  let history = useHistory();
+
+  function goToDashboard() {
+    history.push(`/dashboard`);
+  }
 
   function inputChangedHandler(event, inputIdentifier) {
     const updatedContactForm = {
@@ -48,7 +54,7 @@ function ContactData({ auth, contacts, dispatch }) {
     const contactForm = {};
     const addressKeys = ['street_address', 'city', 'state', 'zipCode'];
     const addressObj = {};
-    const photoUrl = {};
+
     for (let formElementIdentifier in contactData.contactForm) {
       if (addressKeys.includes(formElementIdentifier)) {
         addressObj[formElementIdentifier] =
@@ -67,23 +73,6 @@ function ContactData({ auth, contacts, dispatch }) {
         if (photoUpload) {
           contactForm[formElementIdentifier] = photoUpload;
         }
-
-        // // upload photo and get url
-        // firebase
-        //   .storage()
-        //   .ref(photoUpload.name)
-        //   .put(photoUpload)
-        //   .then(function (snapshot) {
-        //     console.log('Photo Uploaded!');
-        //     firebase
-        //       .storage()
-        //       .ref(photoUpload.name)
-        //       .getDownloadURL()
-        //       .then((url) => {
-        //         photoUrl.url = url;
-        //         console.log('url is: ', url);
-        //       });
-        //   });
       } else {
         console.log('contact form', formElementIdentifier);
         contactForm[formElementIdentifier] =
@@ -102,6 +91,7 @@ function ContactData({ auth, contacts, dispatch }) {
   }
 
   // firebase contact collection for signed in user
+  const storage = firebase.storage();
   const contactCollection = firebase
     .firestore()
     .collection(`users/${auth.auth.uid}/contacts`);
@@ -115,18 +105,18 @@ function ContactData({ auth, contacts, dispatch }) {
         contactCollection.get().then((snapshot) => {
           const data = snapshot.docs.map((d) => d.data());
           dispatch({ type: 'GET_CONTACTS', payload: data });
+
+          goToDashboard();
         });
       });
     } else {
       // upload photo and get url
-      firebase
-        .storage()
+      storage
         .ref(photoFile.name)
         .put(photoFile)
         .then(function (snapshot) {
           console.log('Photo Uploaded!');
-          firebase
-            .storage()
+          storage
             .ref(photoFile.name)
             .getDownloadURL()
             .then((url) => {
@@ -148,6 +138,7 @@ function ContactData({ auth, contacts, dispatch }) {
                 });
               });
               setContactData(formConfig);
+              goToDashboard();
             });
         });
     }
@@ -183,21 +174,6 @@ function ContactData({ auth, contacts, dispatch }) {
     <div className={styles.ContactData}>
       <h4>Enter you Contact Data</h4>
       {form}
-      <h4>My contacts</h4>
-      <ul>
-        {contacts.contacts.map((contact) => {
-          return (
-            <div>
-              <li key={contact.id}>{contact.firstName}</li>
-              {contact.photoFile ? (
-                <img src={contact.photoFile} alt={contact.photoFile} />
-              ) : (
-                'no photo'
-              )}
-            </div>
-          );
-        })}
-      </ul>
     </div>
   );
 }
