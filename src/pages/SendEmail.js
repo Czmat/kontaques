@@ -15,7 +15,11 @@ function SendEmail({ auth, selected }) {
     attachments: [{ filename: '', file: '' }],
   });
   const [show, setShow] = useState(false);
+<<<<<<< HEAD
   const [templates, setTemplates] = useState([]);
+=======
+  const [templates, setTemplates] = useState([])
+>>>>>>> c52718d82691b9c5f209352986a3855c32f242b2
   const onChange = (e) => {
     e.preventDefault();
     setEmailContent({ ...emailContent, [e.target.name]: e.target.value });
@@ -149,6 +153,7 @@ function SendEmail({ auth, selected }) {
       .firestore()
       .collection(`users/${auth.auth.uid}/templates/`)
       .get()
+<<<<<<< HEAD
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
@@ -165,6 +170,26 @@ function SendEmail({ auth, selected }) {
       });
   }, []);
   console.log(emailContent.attachments[1]);
+=======
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            // doc.data() is never undefined for query doc snapshots
+            
+            setTemplates(templates => [...templates, {id: doc.id, subject: doc.data().subject, body: doc.data().body}])
+            console.log(doc.id, " => ", doc.data());
+           
+           
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });;
+  }, []);
+
+  
+
+
+>>>>>>> c52718d82691b9c5f209352986a3855c32f242b2
   return (
     <div className="text-center">
       {selected.map((s, i) => (
@@ -224,12 +249,14 @@ function SendEmail({ auth, selected }) {
             <button
               onClick={() => {
                 setShow(true);
+
               }}
             >
               Save Template
             </button>
           </div>
         )}
+<<<<<<< HEAD
         <div style={{ border: '1px solid blue' }}>
           Templates
           <br />
@@ -247,6 +274,20 @@ function SendEmail({ auth, selected }) {
             </>
           ))}
         </div>
+=======
+        <div style={{border: '1px solid blue'}}>
+          Templates<br/>
+        {templates.map((t, i) => (
+          <>
+          <button style={{color: 'blue'}} onClick={() => {
+            setEmailContent({subject: t.subject, body: t.body})
+          }}>{t.id}</button>
+          <br/>
+          </>
+        ))}
+        </div>
+      
+>>>>>>> c52718d82691b9c5f209352986a3855c32f242b2
       </div>
     </div>
   );
