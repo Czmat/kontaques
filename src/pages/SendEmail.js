@@ -8,11 +8,14 @@ import templateEmail, {
 import firebase from '../firebase/firebase';
 import { isCompositeComponent } from 'react-dom/test-utils';
 
-
 function SendEmail({ auth, selected }) {
-  const [emailContent, setEmailContent] = useState({ subject: '', body: '' });
+  const [emailContent, setEmailContent] = useState({
+    subject: '',
+    body: '',
+    attachments: [{ filename: '', file: '' }],
+  });
   const [show, setShow] = useState(false);
-  const [templates, setTemplates] = useState([])
+  const [templates, setTemplates] = useState([]);
   const onChange = (e) => {
     e.preventDefault();
     setEmailContent({ ...emailContent, [e.target.name]: e.target.value });
@@ -24,11 +27,23 @@ function SendEmail({ auth, selected }) {
       templateEmail(s, '!Subject! ' + emailContent.subject);
       console.log(templatedSubject, templatedBody);
       const message =
+        'Content-Type: multipart/mixed; boundary="boundary"\r\n' +
+        'Content-Type: multipart/alternative; boundary="alt_boundary"\r\n' +
+        'MIME-Version: 1.0\r\n' +
         `From: ${auth.auth.email}.\r\n` +
         `To: ${s.email}\r\n` +
-        'Content-Type: text/html\r\n' +
+        `--boundary\r\n` +
+        `Content-Type: text/html\r\n` +
         `Subject: ${templatedSubject}\r\n\r\n` +
-        `${templatedBody}`;
+        // 'MIME-Version: 1.0\r\n' +
+        `${templatedBody}\r\n\r\n` +
+        '--boundary--\r\n' +
+        `--alt_boundary\r\n` +
+        `Content-Type: image/jpeg; name="${emailContent.attachments[1].filename}"\r\n` +
+        // 'MIME-Version: 1.0\r\n' +
+        'Content-Transfer-Encoding: base64\r\n' +
+        `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n` +
+        `--alt_boundary--\r\n`;
       const encodedMessage = btoa(message);
       const reallyEncodedMessage = encodedMessage
         .replace(/\+/g, '-')
@@ -134,24 +149,22 @@ function SendEmail({ auth, selected }) {
       .firestore()
       .collection(`users/${auth.auth.uid}/templates/`)
       .get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            
-            setTemplates(templates => [...templates, {id: doc.id, subject: doc.data().subject, body: doc.data().body}])
-            console.log(doc.id, " => ", doc.data());
-           
-           
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+
+          setTemplates((templates) => [
+            ...templates,
+            { id: doc.id, subject: doc.data().subject, body: doc.data().body },
+          ]);
+          console.log(doc.id, ' => ', doc.data());
         });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });;
+      })
+      .catch(function (error) {
+        console.log('Error getting documents: ', error);
+      });
   }, []);
-
-  
-
-
+  console.log(emailContent.attachments[1]);
   return (
     <div className="text-center">
       {selected.map((s, i) => (
@@ -177,8 +190,18 @@ function SendEmail({ auth, selected }) {
         />
 
         {selected[0] ? <div>{bodyButtons}</div> : <div></div>}
-
         <br />
+        <input
+          type="file"
+          name="attachment"
+          onChange={(e) => {
+            let newAttach = emailContent.attachments.push({
+              filename: e.target.files[0].name,
+              file: e.target.value,
+            });
+            setEmailContent(emailContent, { attachments: newAttach });
+          }}
+        />
         <br />
 
         <button onClick={sendEmail}>Send Email</button>
@@ -201,25 +224,29 @@ function SendEmail({ auth, selected }) {
             <button
               onClick={() => {
                 setShow(true);
-
               }}
             >
               Save Template
             </button>
           </div>
         )}
-        <div style={{border: '1px solid blue'}}>
-          Templates<br/>
-        {templates.map((t, i) => (
-          <>
-          <button style={{color: 'blue'}} onClick={() => {
-            setEmailContent({subject: t.subject, body: t.body})
-          }}>{t.id}</button>
-          <br/>
-          </>
-        ))}
+        <div style={{ border: '1px solid blue' }}>
+          Templates
+          <br />
+          {templates.map((t, i) => (
+            <>
+              <button
+                style={{ color: 'blue' }}
+                onClick={() => {
+                  setEmailContent({ subject: t.subject, body: t.body });
+                }}
+              >
+                {t.id}
+              </button>
+              <br />
+            </>
+          ))}
         </div>
-      
       </div>
     </div>
   );
