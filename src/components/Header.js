@@ -35,6 +35,7 @@ function Header({ auth, dispatch }) {
           </p>
           <button onClick={() => history.push('/dashboard')}>Dashboard</button>
           <button onClick={() => history.push('/send')}>Send an Email</button>
+          <button onClick={() => history.push('/scanner')}>QR Scanner</button>
         </div>
       ) : (
         <div className="nav-list">
