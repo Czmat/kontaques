@@ -27,6 +27,13 @@ const ContactList = ({ updateContact, contacts, dispatch }) => {
     goToUpdateContact();
   };
 
+  const isChecked = (id) => {
+    return contacts.selectedContacts.some((selectedContact) => {
+      return selectedContact.id === id;
+    });
+  };
+
+  console.log(contacts);
   return (
     <div className={styles.Contacts}>
       <h4>My contacts</h4>
@@ -39,6 +46,7 @@ const ContactList = ({ updateContact, contacts, dispatch }) => {
                   type='checkbox'
                   name='check'
                   onChange={(e) => addContact(e, contact)}
+                  checked={isChecked(contact.id)}
                 />
                 {'    '}
                 <li style={{ display: 'inline-block' }} key={contact.id}>
@@ -59,6 +67,7 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
   contacts: state.contacts,
   updateContact: state.contacts.updateContact,
+  // selected: state.contacts.selectedContacts,
 });
 
 export default connect(mapStateToProps)(ContactList);

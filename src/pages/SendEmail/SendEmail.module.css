@@ -1,0 +1,88 @@
+.sendEmail {
+  margin-top: 4rem;
+}
+
+.sendEmail h2 {
+  text-align: center;
+  margin: 6rem;
+}
+/* .emailForm {
+  min-width: 16rem;
+  width: 80%;
+  margin: 20px auto;
+  box-shadow: 0 2px 3px #ccc;
+  border: 1px solid #eee;
+  padding: 10px;
+} */
+
+button {
+  background: rgb(143, 143, 143);
+  color: white;
+  font: inherit;
+  border: 1.5px solid rgb(143, 143, 143);
+  padding: 1px 2px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover,
+button:active {
+  background: white;
+  color: rgb(143, 143, 143);
+}
+
+button:focus {
+  outline: none;
+}
+
+button.submitEmail {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.sendEmail ul {
+  text-align: center;
+}
+
+.sendEmail li {
+  display: inline-block;
+  padding: 1.5rem 1rem;
+}
+
+.sendEmail .emailForm {
+  padding: 1rem;
+  box-shadow: 0 2px 3px #ccc;
+  border: 1px solid #eee;
+}
+
+.emailForm label {
+  font-weight: bold;
+}
+
+.emailForm label,
+.emailForm input,
+.emailForm textarea {
+  display: block;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.emailForm input + label {
+  display: inline-block;
+  width: auto;
+  vertical-align: bottom;
+}
+
+.emailForm input:focus {
+  outline: none;
+  background: #d8f3df;
+}
+
+@media (min-width: 40rem) {
+  .emailForm {
+    margin: auto;
+    width: 35rem;
+  }
+}

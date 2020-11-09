@@ -12,7 +12,7 @@ import firebase from './firebase/firebase';
 import ContactList from './components/ContactList';
 import UpdateContact from './pages/ContactData/UpdateContact';
 
-import SendEmail from './pages/SendEmail';
+import SendEmail from './pages/SendEmail/SendEmail';
 function App({ auth, dispatch }) {
   const [redirect, setRedirect] = useState(false);
   useEffect(() => {
