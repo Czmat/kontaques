@@ -3,16 +3,15 @@ import { connect } from 'react-redux';
 import templateEmail, {
   templatedBody,
   templatedSubject,
-} from '../gmail/templating';
+} from '../../gmail/templating';
 
-import firebase from '../firebase/firebase';
+import firebase from '../../firebase/firebase';
 import { isCompositeComponent } from 'react-dom/test-utils';
-
 
 function SendEmail({ auth, selected }) {
   const [emailContent, setEmailContent] = useState({ subject: '', body: '' });
   const [show, setShow] = useState(false);
-  const [templates, setTemplates] = useState([])
+  const [templates, setTemplates] = useState([]);
   const onChange = (e) => {
     e.preventDefault();
     setEmailContent({ ...emailContent, [e.target.name]: e.target.value });
@@ -134,33 +133,31 @@ function SendEmail({ auth, selected }) {
       .firestore()
       .collection(`users/${auth.auth.uid}/templates/`)
       .get()
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            
-            setTemplates(templates => [...templates, {id: doc.id, subject: doc.data().subject, body: doc.data().body}])
-            console.log(doc.id, " => ", doc.data());
-           
-           
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+
+          setTemplates((templates) => [
+            ...templates,
+            { id: doc.id, subject: doc.data().subject, body: doc.data().body },
+          ]);
+          console.log(doc.id, ' => ', doc.data());
         });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });;
+      })
+      .catch(function (error) {
+        console.log('Error getting documents: ', error);
+      });
   }, []);
 
-  
-
-
   return (
-    <div className="text-center">
+    <div className='text-center'>
       {selected.map((s, i) => (
         <p key={i}>{s.firstName}</p>
       ))}
       <div>
         <label>Subject</label>
         <input
-          name="subject"
+          name='subject'
           onChange={onChange}
           value={emailContent.subject}
         />
@@ -169,9 +166,9 @@ function SendEmail({ auth, selected }) {
         <br />
         <label>Body</label>
         <textarea
-          className="email-body"
-          name="body"
-          id="body"
+          className='email-body'
+          name='body'
+          id='body'
           onChange={onChange}
           value={emailContent.body}
         />
@@ -188,8 +185,8 @@ function SendEmail({ auth, selected }) {
           <div>
             <label>Template Name</label>
             <input
-              type="text"
-              name="templateName"
+              type='text'
+              name='templateName'
               onChange={(e) => {
                 tempName = e.target.value;
               }}
@@ -201,25 +198,29 @@ function SendEmail({ auth, selected }) {
             <button
               onClick={() => {
                 setShow(true);
-
               }}
             >
               Save Template
             </button>
           </div>
         )}
-        <div style={{border: '1px solid blue'}}>
-          Templates<br/>
-        {templates.map((t, i) => (
-          <>
-          <button style={{color: 'blue'}} onClick={() => {
-            setEmailContent({subject: t.subject, body: t.body})
-          }}>{t.id}</button>
-          <br/>
-          </>
-        ))}
+        <div style={{ border: '1px solid blue' }}>
+          Templates
+          <br />
+          {templates.map((t, i) => (
+            <>
+              <button
+                style={{ color: 'blue' }}
+                onClick={() => {
+                  setEmailContent({ subject: t.subject, body: t.body });
+                }}
+              >
+                {t.id}
+              </button>
+              <br />
+            </>
+          ))}
         </div>
-      
       </div>
     </div>
   );
