@@ -12,75 +12,95 @@ function SendEmail({ auth, selected }) {
   const [emailContent, setEmailContent] = useState({
     subject: '',
     body: '',
-    attachments: [{ filename: '', file: '' }],
+    attachments: [],
   });
   const [show, setShow] = useState(false);
 
   const [templates, setTemplates] = useState([]);
-
+  console.log('auth', auth.auth.uid);
   const onChange = (e) => {
     e.preventDefault();
     setEmailContent({ ...emailContent, [e.target.name]: e.target.value });
   };
   function sendEmail() {
-    selected.map((s) => {
-      // this templated email returns the body with variables replaced. the result is import as 'result'
-      templateEmail(s, emailContent.body);
-      templateEmail(s, '!Subject! ' + emailContent.subject);
-      console.log(templatedSubject, templatedBody);
-      // const message =
-      //   'Content-Type: multipart/mixed; boundary="boundary"\r\n' +
-      //   'Content-Type: multipart/alternative; boundary="alt_boundary"\r\n' +
-      //   'MIME-Version: 1.0\r\n' +
-      //   `From: ${auth.auth.email}.\r\n` +
-      //   `To: ${s.email}\r\n` +
-      //   `--boundary\r\n` +
-      //   `Content-Type: text/html\r\n` +
-      //   `Subject: ${templatedSubject}\r\n\r\n` +
-      //   // 'MIME-Version: 1.0\r\n' +
-      //   `${templatedBody}\r\n\r\n` +
-      //   '--boundary--\r\n' +
-      //   `--alt_boundary\r\n` +
-      //   `Content-Type: image/jpeg; name="${emailContent.attachments[1].filename}"\r\n` +
-      //   // 'MIME-Version: 1.0\r\n' +
-      //   'Content-Transfer-Encoding: base64\r\n' +
-      //   `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n` +
-      //   `--alt_boundary--\r\n`;
-      // const newImage = btoa(emailContent.attachments[1].filename);
-      const message =
-        'Content-Type: multipart/related; boundary="your_boundary"\r\n' +
-        `From: ${auth.auth.email}.\r\n` +
-        `To: ${s.email}\r\n` +
-        `Subject: ${templatedSubject}\r\n\r\n` +
-        '--your_boundary\r\n' +
-        'Content-Type: text/html\r\n' +
-        `${templatedBody}\r\n` +
-        '--your_boundary\r\n' +
-        `Content-Type: image/jpeg\r\n` +
-        'Content-Transfer-Encoding: base64\r\n' +
-        `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n` +
-        `${emailContent.attachments[1].file}\r\n` +
-        '--your_boundary--\r\n';
+    let attachments = [];
 
-      const encodedMessage = btoa(message);
-      const reallyEncodedMessage = encodedMessage
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
-        .replace(/=+$/, '');
-
-      console.log('message', message);
-
-      window.gapi.client.gmail.users.messages
-        .send({
-          userId: 'me',
-          resource: {
-            raw: reallyEncodedMessage,
-          },
-        })
-        .then(() => {
-          console.log('email sent');
-        });
+    emailContent.attachments.forEach(async (a) => {
+      // console.log('extension', extension);
+      let attachment = await toBase64(a);
+      if (a.type) {
+        attachments.push(`--your_boundary\r\n
+        Content-Type: ${a.type}\r\n 
+      Content-Transfer-Encoding: base64\r\n
+      Content-Disposition: attachment; filename="${a.name}"\r\n\r\n
+      ${attachment}\r\n`);
+      } else {
+        let extension = a.name.slice(((a.name.lastIndexOf('.') - 1) >>> 0) + 2);
+        if ((extension = 'docx')) {
+          attachments.push(`--your_boundary\r\n
+        Content-Type: application/octet-stream\r\n 
+            Content-Transfer-Encoding: base64\r\n
+            Content-Disposition: attachment; filename="${a.name}"\r\n\r\n
+            ${attachment}\r\n`);
+        }
+      }
     });
+    console.log('before');
+    console.log('attachments', attachments);
+
+    let a = attachments.join('');
+    console.log('before', a);
+    let b = '';
+    if (attachments) {
+      attachments.forEach((att) => {
+        b += att;
+      });
+    }
+    console.log('b', b);
+
+    // emailContent.attachments[0].filename.slice(
+    //   ((emailContent.attachments[0].filename.lastIndexOf('.') - 1) >>> 0) + 2
+    // );
+
+    // const attachment = await toBase64(emailContent.attachments[0].file);
+    // console.log('slice', attachment.slice(attachment.indexOf('base64') + 6));
+
+    // selected.map((s) => {
+    //   // this templated email returns the body with variables replaced. the result is import as 'result'
+    //   templateEmail(s, emailContent.body);
+    //   templateEmail(s, '!Subject! ' + emailContent.subject);
+    //   console.log(templatedSubject, templatedBody);
+
+    //   const message =
+    //     'Content-Type: multipart/mixed; boundary="your_boundary"\r\n' +
+    //     `From: ${auth.auth.email}.\r\n` +
+    //     `To: ${s.email}\r\n` +
+    //     `Subject: ${templatedSubject}\r\n\r\n` +
+    //     '--your_boundary\r\n' +
+    //     'Content-Type: text/html\r\n\r\n' +
+    //     `${templatedBody}\r\n\r\n` +
+    //     '--your_boundary\r\n' +
+    //     `${attachments.join()}\r\n` +
+    //     '--your_boundary--\r\n';
+
+    //   const encodedMessage = btoa(message);
+    //   const reallyEncodedMessage = encodedMessage
+    //     .replace(/\+/g, '-')
+    //     .replace(/\//g, '_')
+    //     .replace(/=+$/, '');
+    //   console.log('message', message);
+
+    // window.gapi.client.gmail.users.messages
+    //   .send({
+    //     userId: 'me',
+    //     resource: {
+    //       raw: reallyEncodedMessage,
+    //     },
+    //   })
+    //   .then(() => {
+    //     console.log('email sent');
+    // });
+    // });
   }
 
   const subjectButtons = [];
@@ -162,6 +182,18 @@ function SendEmail({ auth, selected }) {
     }
   }
 
+  function removeAttachments(a) {
+    const index = emailContent.attachments.indexOf(a);
+    const newArray = emailContent.attachments.slice(index - 1, index);
+    setEmailContent({ ...emailContent, attachments: newArray });
+  }
+  const uploadedAttachments = emailContent.attachments.map((a) => (
+    <div>
+      <p>{a.name}</p>
+      <button onClick={(a) => removeAttachments(a)}>X</button>
+    </div>
+  ));
+
   useEffect(() => {
     firebase
       .firestore()
@@ -176,14 +208,21 @@ function SendEmail({ auth, selected }) {
             ...templates,
             { id: doc.id, subject: doc.data().subject, body: doc.data().body },
           ]);
-          console.log(doc.id, ' => ', doc.data());
         });
       })
       .catch(function (error) {
         console.log('Error getting documents: ', error);
       });
   }, []);
-  console.log(emailContent.attachments[1]);
+  console.log(emailContent);
+
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result.replace(/^.*base64,/, ''));
+      reader.onerror = (error) => reject(error);
+    });
 
   return (
     <div className="text-center">
@@ -211,17 +250,22 @@ function SendEmail({ auth, selected }) {
 
         {selected[0] ? <div>{bodyButtons}</div> : <div></div>}
         <br />
-        <input
-          type="file"
-          name="attachment"
-          onChange={(e) => {
-            let newAttach = emailContent.attachments.push({
-              filename: e.target.files[0].name,
-              file: e.target.value,
-            });
-            setEmailContent(emailContent, { attachments: newAttach });
-          }}
-        />
+        <div>
+          <input
+            type="file"
+            name="attachment"
+            onChange={(e) => {
+              const [file] = e.target.files;
+
+              setEmailContent({
+                ...emailContent,
+                attachments: [...emailContent.attachments, file],
+              });
+              e.target.value = '';
+            }}
+          />
+        </div>
+        {uploadedAttachments}
         <br />
 
         <button onClick={sendEmail}>Send Email</button>
