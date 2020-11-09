@@ -1,0 +1,15 @@
+.Login_container {
+  margin: auto;
+  /* height: 25rem; */
+  height: 400px;
+  width: 80%;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 600px) {
+  .Login_container {
+    width: 500px;
+  }
+}

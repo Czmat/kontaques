@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
   BrowserRouter as Router,
@@ -8,6 +8,8 @@ import {
   Link,
   useHistory,
 } from 'react-router-dom';
+import '../../App.css';
+import styles from './Home.module.css';
 
 function Home({ auth }) {
   const history = useHistory();
@@ -20,11 +22,13 @@ function Home({ auth }) {
     history.push(`/dashboard`);
   }
   return (
-    <>
-      <div>This is the public page</div>
-      <button onClick={goToLogin}>Go to Login</button>
-      <button onClick={goToDashboard}>Go to Dashboard</button>
-    </>
+    <main className='main'>
+      <h1 className={styles.home_title}>This is the public page</h1>
+      <div className={styles.home}>
+        <button onClick={goToLogin}>Login</button>
+        <button onClick={goToDashboard}>Dashboard</button>
+      </div>
+    </main>
   );
 }
 const mapStateToProps = (state) => ({
