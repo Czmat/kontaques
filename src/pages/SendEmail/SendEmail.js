@@ -56,7 +56,10 @@ function SendEmail({ auth, selected }) {
             <label>Subject</label>
             <input name='subject' onChange={onChange} />
             <br />
-            <div>
+
+            <br />
+            <label className={styles.emailBodyLabel}>Body</label>
+            <div className={styles.emailKeys}>
               {selected[0] ? (
                 Object.keys(selected[0]).map((key, i) => (
                   <button
@@ -76,8 +79,6 @@ function SendEmail({ auth, selected }) {
                 <div></div>
               )}
             </div>
-            <br />
-            <label>Body</label>
             <textarea
               className='email-body'
               name='body'

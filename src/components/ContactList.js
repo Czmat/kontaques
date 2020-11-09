@@ -33,7 +33,6 @@ const ContactList = ({ updateContact, contacts, dispatch }) => {
     });
   };
 
-  console.log(contacts);
   return (
     <div className={styles.Contacts}>
       <h4>My contacts</h4>

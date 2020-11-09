@@ -62,10 +62,23 @@ button.submitEmail {
 }
 
 .emailForm label,
-.emailForm input,
-.emailForm textarea {
+.emailForm input {
   display: block;
   margin-top: 1rem;
+  width: 100%;
+}
+
+.emailBodyLabel {
+  margin-bottom: 1rem;
+}
+
+.emailKeys {
+  text-align: center;
+}
+
+.emailForm textarea {
+  display: block;
+  margin-top: 0.5rem;
   width: 100%;
 }
 
