@@ -15,11 +15,10 @@ function SendEmail({ auth, selected }) {
     attachments: [{ filename: '', file: '' }],
   });
   const [show, setShow] = useState(false);
-<<<<<<< HEAD
+
   const [templates, setTemplates] = useState([]);
-=======
-  const [templates, setTemplates] = useState([])
->>>>>>> c52718d82691b9c5f209352986a3855c32f242b2
+
+
   const onChange = (e) => {
     e.preventDefault();
     setEmailContent({ ...emailContent, [e.target.name]: e.target.value });
@@ -30,24 +29,43 @@ function SendEmail({ auth, selected }) {
       templateEmail(s, emailContent.body);
       templateEmail(s, '!Subject! ' + emailContent.subject);
       console.log(templatedSubject, templatedBody);
+      // const message =
+      //   'Content-Type: multipart/mixed; boundary="boundary"\r\n' +
+      //   'Content-Type: multipart/alternative; boundary="alt_boundary"\r\n' +
+      //   'MIME-Version: 1.0\r\n' +
+      //   `From: ${auth.auth.email}.\r\n` +
+      //   `To: ${s.email}\r\n` +
+      //   `--boundary\r\n` +
+      //   `Content-Type: text/html\r\n` +
+      //   `Subject: ${templatedSubject}\r\n\r\n` +
+      //   // 'MIME-Version: 1.0\r\n' +
+      //   `${templatedBody}\r\n\r\n` +
+      //   '--boundary--\r\n' +
+      //   `--alt_boundary\r\n` +
+      //   `Content-Type: image/jpeg; name="${emailContent.attachments[1].filename}"\r\n` +
+      //   // 'MIME-Version: 1.0\r\n' +
+      //   'Content-Transfer-Encoding: base64\r\n' +
+      //   `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n` +
+      //   `--alt_boundary--\r\n`;
+
       const message =
-        'Content-Type: multipart/mixed; boundary="boundary"\r\n' +
-        'Content-Type: multipart/alternative; boundary="alt_boundary"\r\n' +
-        'MIME-Version: 1.0\r\n' +
-        `From: ${auth.auth.email}.\r\n` +
-        `To: ${s.email}\r\n` +
-        `--boundary\r\n` +
-        `Content-Type: text/html\r\n` +
-        `Subject: ${templatedSubject}\r\n\r\n` +
-        // 'MIME-Version: 1.0\r\n' +
-        `${templatedBody}\r\n\r\n` +
-        '--boundary--\r\n' +
-        `--alt_boundary\r\n` +
-        `Content-Type: image/jpeg; name="${emailContent.attachments[1].filename}"\r\n` +
-        // 'MIME-Version: 1.0\r\n' +
-        'Content-Transfer-Encoding: base64\r\n' +
-        `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n` +
-        `--alt_boundary--\r\n`;
+      `From: ${auth.auth.email}.\r\n` +
+      `To: ${s.email}\r\n` +
+      'Content-Type: text/html\r\n' +
+      `Subject: ${templatedSubject}\r\n\r\n` +
+      `${templatedBody}\r\n` +
+      `Content-Type: image/jpeg; name="${emailContent.attachments[1].filename}"\r\n` +
+      'Content-Transfer-Encoding: base64\r\n' +
+      `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n`;
+
+
+  
+
+
+
+
+
+        
       const encodedMessage = btoa(message);
       const reallyEncodedMessage = encodedMessage
         .replace(/\+/g, '-')
@@ -153,7 +171,7 @@ function SendEmail({ auth, selected }) {
       .firestore()
       .collection(`users/${auth.auth.uid}/templates/`)
       .get()
-<<<<<<< HEAD
+
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
@@ -170,26 +188,7 @@ function SendEmail({ auth, selected }) {
       });
   }, []);
   console.log(emailContent.attachments[1]);
-=======
-      .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            // doc.data() is never undefined for query doc snapshots
-            
-            setTemplates(templates => [...templates, {id: doc.id, subject: doc.data().subject, body: doc.data().body}])
-            console.log(doc.id, " => ", doc.data());
-           
-           
-        });
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });;
-  }, []);
 
-  
-
-
->>>>>>> c52718d82691b9c5f209352986a3855c32f242b2
   return (
     <div className="text-center">
       {selected.map((s, i) => (
@@ -256,7 +255,7 @@ function SendEmail({ auth, selected }) {
             </button>
           </div>
         )}
-<<<<<<< HEAD
+
         <div style={{ border: '1px solid blue' }}>
           Templates
           <br />
@@ -274,20 +273,8 @@ function SendEmail({ auth, selected }) {
             </>
           ))}
         </div>
-=======
-        <div style={{border: '1px solid blue'}}>
-          Templates<br/>
-        {templates.map((t, i) => (
-          <>
-          <button style={{color: 'blue'}} onClick={() => {
-            setEmailContent({subject: t.subject, body: t.body})
-          }}>{t.id}</button>
-          <br/>
-          </>
-        ))}
-        </div>
-      
->>>>>>> c52718d82691b9c5f209352986a3855c32f242b2
+
+
       </div>
     </div>
   );
