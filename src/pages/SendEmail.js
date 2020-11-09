@@ -47,25 +47,25 @@ function SendEmail({ auth, selected }) {
       //   'Content-Transfer-Encoding: base64\r\n' +
       //   `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n` +
       //   `--alt_boundary--\r\n`;
-
+// const newImage = btoa(emailContent.attachments[1].filename);
       const message =
+      'Content-Type: multipart/related; boundary="your_boundary"\r\n' +
       `From: ${auth.auth.email}.\r\n` +
       `To: ${s.email}\r\n` +
-      'Content-Type: text/html\r\n' +
       `Subject: ${templatedSubject}\r\n\r\n` +
+      '--your_boundary\r\n' + 
+      'Content-Type: text/plain\r\n' +
       `${templatedBody}\r\n` +
-      `Content-Type: image/jpeg; name="${emailContent.attachments[1].filename}"\r\n` +
+      '--your_boundary\r\n' + 
+      `Content-Type: image/jpeg\r\n` +
       'Content-Transfer-Encoding: base64\r\n' +
-      `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n`;
+      `Content-Disposition: attachment; filename="${emailContent.attachments[1].filename}"\r\n\r\n` +
+      `${emailContent.attachments[1].file}\r\n` + 
+      '--your_boundary--\r\n';
 
 
   
 
-
-
-
-
-        
       const encodedMessage = btoa(message);
       const reallyEncodedMessage = encodedMessage
         .replace(/\+/g, '-')
