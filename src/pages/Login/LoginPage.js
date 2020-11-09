@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
-import firebase, { signIn } from '../firebase/firebase';
-import '../App.css';
+import firebase, { signIn } from '../../firebase/firebase';
+import '../../App.css';
+import s from './Login.module.css';
 
 const provider = new firebase.auth.GoogleAuthProvider();
 provider.addScope('https://mail.google.com/');
@@ -71,7 +72,11 @@ function LoginPage({ auth, dispatch }) {
 
   return (
     <div className='main'>
-      <button onClick={loginHandler}>Log In</button>
+      <div className={s.Login_container}>
+        <button className='button' onClick={loginHandler}>
+          Log In
+        </button>
+      </div>
     </div>
   );
 }

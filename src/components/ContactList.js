@@ -1,7 +1,8 @@
 import React from 'react';
-import styles from '../pages/ContactData/ContactData.module.css';
+// import styles from '../pages/ContactData/ContactData.module.css';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
+import styles from './ContactList.module.css';
 
 const ContactList = ({ updateContact, contacts, dispatch }) => {
   let history = useHistory();
@@ -27,17 +28,16 @@ const ContactList = ({ updateContact, contacts, dispatch }) => {
   };
 
   return (
-    <div className={styles.ContactData}>
+    <div className={styles.Contacts}>
       <h4>My contacts</h4>
-      <ul>
+      <ul className={styles.ContactList}>
         <div>
           {contacts.contacts.map((contact, i) => {
             return (
-              <div key={i}>
+              <div className={styles.formGroup} key={i}>
                 <input
-                  style={{ display: 'inline-block' }}
-                  type="checkbox"
-                  name="check"
+                  type='checkbox'
+                  name='check'
                   onChange={(e) => addContact(e, contact)}
                 />
                 {'    '}

@@ -58,6 +58,16 @@ function Header({ auth, dispatch }) {
                   Send an Email
                 </a>
               </li>
+              <li className={styles.mobile_nav__item}>
+                <a
+                  onClick={() => {
+                    Logout();
+                    toggleModal();
+                  }}
+                >
+                  Logout
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -94,9 +104,15 @@ function Header({ auth, dispatch }) {
           </nav>
         </div>
       ) : (
-        <nav className={styles.main_nav}>
-          <a onClick={Login}>Login</a>
-        </nav>
+        <h1
+          style={{
+            textAlign: 'center',
+            color: 'white',
+            minHeight: '3rem',
+          }}
+        >
+          <span>Spinspire CRM</span>
+        </h1>
       )}
     </header>
   );

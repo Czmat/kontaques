@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/Home/Home';
 import Header from './components/UI/Header/Header';
-import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
+import LoginPage from './pages/Login/LoginPage';
+import Dashboard from './pages/Dashboard/Dashboard';
 import { loadGmailApi } from './gmail/Gmail';
 import ContactData from './pages/ContactData/ContactData';
 import { connect } from 'react-redux';
@@ -55,7 +55,7 @@ function App({ auth, dispatch }) {
           </Route>
           <Route path='/dashboard'>
             {auth.auth ? (
-              <div class='main'>
+              <div className='main'>
                 <Dashboard />
               </div>
             ) : (
@@ -66,7 +66,7 @@ function App({ auth, dispatch }) {
           </Route>
           <Route path='/contact-data'>
             {auth.auth ? (
-              <div class='main'>
+              <div className='main'>
                 <ContactData />
               </div>
             ) : (
@@ -77,7 +77,7 @@ function App({ auth, dispatch }) {
           </Route>
           <Route path='/update-contact'>
             {auth.auth ? (
-              <div class='main'>
+              <div className='main'>
                 <UpdateContact />
               </div>
             ) : (

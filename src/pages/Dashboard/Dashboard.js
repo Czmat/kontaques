@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import ContactList from '../components/ContactList';
-import '../css/style.css';
+import ContactList from '../../components/ContactList';
+import '../../App.css';
+import '../../css/style.css';
+import styles from './Dashboard.module.css';
 
 function Dashboard({ auth }) {
   let history = useHistory();
@@ -20,17 +22,19 @@ function Dashboard({ auth }) {
   return (
     <div>
       {auth.auth ? (
-        <div className="display-flex">
+        <div className={styles.dashboard}>
           <div>
-            <button onClick={goToContactData}>Create Contact</button>
+            <button className='button' onClick={goToContactData}>
+              Create Contact
+            </button>
           </div>
           <div>
             <ContactList />
           </div>
         </div>
       ) : (
-        <div className="display-i-b">
-          <div className="loader"></div>Redirecting to login
+        <div className='display-i-b'>
+          <div className='loader'></div>Redirecting to login
         </div>
       )}
     </div>

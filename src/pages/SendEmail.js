@@ -40,13 +40,13 @@ function SendEmail({ auth, selected }) {
   }
 
   return (
-    <div className="text-center">
+    <div className='main'>
       {selected.map((s, i) => (
         <p key={i}>{s.firstName}</p>
       ))}
       <div>
         <label>Subject</label>
-        <input name="subject" onChange={onChange} />
+        <input name='subject' onChange={onChange} />
         <br />
         <div>
           {selected[0] ? (
@@ -71,9 +71,9 @@ function SendEmail({ auth, selected }) {
         <br />
         <label>Body</label>
         <textarea
-          className="email-body"
-          name="body"
-          id="body"
+          className='email-body'
+          name='body'
+          id='body'
           onChange={onChange}
           value={emailContent.body}
         />
