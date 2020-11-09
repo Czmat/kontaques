@@ -97,6 +97,9 @@ function Header({ auth, dispatch }) {
               <li className={styles.main_nav__item}>
                 <a onClick={() => goTo('send')}>Send an Email</a>
               </li>
+              <li>
+                <a onClick={() => goTo('scanner')}>QR Scanner</a>
+              </li>
               <li className={styles.main_nav__item}>
                 <a onClick={Logout}>Logout</a>
               </li>

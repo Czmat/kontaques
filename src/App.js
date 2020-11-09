@@ -12,7 +12,8 @@ import firebase from './firebase/firebase';
 import ContactList from './components/ContactList';
 import UpdateContact from './pages/ContactData/UpdateContact';
 
-import SendEmail from './pages/SendEmail/SendEmail';
+import SendEmail from './pages/SendEmail';
+import Scanner from './pages/QrScanner/Scanner';
 function App({ auth, dispatch }) {
   const [redirect, setRedirect] = useState(false);
   useEffect(() => {
@@ -89,6 +90,15 @@ function App({ auth, dispatch }) {
           <Route path='/send'>
             {auth.auth ? (
               <SendEmail />
+            ) : (
+              <div>
+                {redirect ? <LoginPage /> : <div className='loader'></div>}
+              </div>
+            )}
+          </Route>
+          <Route path='/scanner'>
+            {auth.auth ? (
+              <Scanner />
             ) : (
               <div>
                 {redirect ? <LoginPage /> : <div className='loader'></div>}

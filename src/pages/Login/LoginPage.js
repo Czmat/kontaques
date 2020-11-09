@@ -9,14 +9,6 @@ const provider = new firebase.auth.GoogleAuthProvider();
 provider.addScope('https://mail.google.com/');
 
 function LoginPage({ auth, dispatch }) {
-  useEffect(() => {
-    // contactCollection.get().then((snapshot) => {
-    //   const data = snapshot.docs.map((d) => d.data());
-    //   console.log('snapshot', data);
-    //   dispatch({ type: 'GET_CONTACTS', payload: data });
-    // });
-  }, [auth.auth]);
-
   if (auth.auth) {
     const contactCollection = firebase
       .firestore()
