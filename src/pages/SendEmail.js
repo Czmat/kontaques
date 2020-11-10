@@ -8,7 +8,7 @@ import templateEmail, {
 import firebase from '../firebase/firebase';
 import { isCompositeComponent } from 'react-dom/test-utils';
 
-function SendEmail({ auth, selected }) {
+function SendEmail({ auth, selectedContacts }) {
   const [emailContent, setEmailContent] = useState({
     subject: '',
     body: '',
@@ -17,98 +17,80 @@ function SendEmail({ auth, selected }) {
   const [show, setShow] = useState(false);
 
   const [templates, setTemplates] = useState([]);
-  console.log('auth', auth.auth.uid);
   const onChange = (e) => {
     e.preventDefault();
     setEmailContent({ ...emailContent, [e.target.name]: e.target.value });
   };
-  function sendEmail() {
-    let attachments = [];
 
-    emailContent.attachments.forEach(async (a) => {
-      // console.log('extension', extension);
-      let attachment = await toBase64(a);
-      if (a.type) {
-        attachments.push(`--your_boundary\r\n
-        Content-Type: ${a.type}\r\n 
-      Content-Transfer-Encoding: base64\r\n
-      Content-Disposition: attachment; filename="${a.name}"\r\n\r\n
-      ${attachment}\r\n`);
-      } else {
-        let extension = a.name.slice(((a.name.lastIndexOf('.') - 1) >>> 0) + 2);
-        if ((extension = 'docx')) {
-          attachments.push(`--your_boundary\r\n
-        Content-Type: application/octet-stream\r\n 
-            Content-Transfer-Encoding: base64\r\n
-            Content-Disposition: attachment; filename="${a.name}"\r\n\r\n
-            ${attachment}\r\n`);
-        }
-      }
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        console.log('reader.result', reader.result);
+        return resolve(reader.result.replace(/^.*;base64,/, ''));
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
     });
-    console.log('before');
-    console.log('attachments', attachments);
 
-    let a = attachments.join('');
-    console.log('before', a);
-    let b = '';
-    if (attachments) {
-      attachments.forEach((att) => {
-        b += att;
-      });
-    }
-    console.log('b', b);
+  async function sendEmail() {
+    const encodedAttachments = await Promise.all(
+      emailContent.attachments.map(async (a) => {
+        let attachment = await toBase64(a);
+        const type = a.type || 'application/octet-stream';
+        return (
+          `--your_boundary\r\n` +
+          `Content-Type: ${type}; name="${a.name}"\r\n` +
+          `Content-Transfer-Encoding: base64\r\n` +
+          `Content-Disposition: attachment; filename="${a.name}"\r\n\r\n` +
+          `${attachment}\r\n\r\n`
+        );
+      })
+    );
+    let attachments = encodedAttachments.join('');
 
-    // emailContent.attachments[0].filename.slice(
-    //   ((emailContent.attachments[0].filename.lastIndexOf('.') - 1) >>> 0) + 2
-    // );
+    selectedContacts.forEach((s) => {
+      // this templated email returns the body with variables replaced. the result is import as 'result'
+      templateEmail(s, emailContent.body);
+      templateEmail(s, '!Subject! ' + emailContent.subject);
 
-    // const attachment = await toBase64(emailContent.attachments[0].file);
-    // console.log('slice', attachment.slice(attachment.indexOf('base64') + 6));
+      const message =
+        'Content-Type: multipart/mixed; boundary="your_boundary"\r\n' +
+        `From: ${auth.auth.email}\r\n` +
+        `To: ${s.email}\r\n` +
+        `Subject: ${templatedSubject}\r\n\r\n` +
+        `--your_boundary\r\n` +
+        'Content-Type: text/html\r\n\r\n' +
+        `${templatedBody}\r\n` +
+        `${attachments}` +
+        '--your_boundary--\r\n';
 
-    // selected.map((s) => {
-    //   // this templated email returns the body with variables replaced. the result is import as 'result'
-    //   templateEmail(s, emailContent.body);
-    //   templateEmail(s, '!Subject! ' + emailContent.subject);
-    //   console.log(templatedSubject, templatedBody);
+      const encodedMessage = btoa(message);
+      const reallyEncodedMessage = encodedMessage
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
 
-    //   const message =
-    //     'Content-Type: multipart/mixed; boundary="your_boundary"\r\n' +
-    //     `From: ${auth.auth.email}.\r\n` +
-    //     `To: ${s.email}\r\n` +
-    //     `Subject: ${templatedSubject}\r\n\r\n` +
-    //     '--your_boundary\r\n' +
-    //     'Content-Type: text/html\r\n\r\n' +
-    //     `${templatedBody}\r\n\r\n` +
-    //     '--your_boundary\r\n' +
-    //     `${attachments.join()}\r\n` +
-    //     '--your_boundary--\r\n';
-
-    //   const encodedMessage = btoa(message);
-    //   const reallyEncodedMessage = encodedMessage
-    //     .replace(/\+/g, '-')
-    //     .replace(/\//g, '_')
-    //     .replace(/=+$/, '');
-    //   console.log('message', message);
-
-    // window.gapi.client.gmail.users.messages
-    //   .send({
-    //     userId: 'me',
-    //     resource: {
-    //       raw: reallyEncodedMessage,
-    //     },
-    //   })
-    //   .then(() => {
-    //     console.log('email sent');
-    // });
-    // });
+      window.gapi.client.gmail.users.messages
+        .send({
+          userId: 'me',
+          resource: {
+            raw: reallyEncodedMessage,
+          },
+        })
+        .then(() => {
+          console.log('email sent');
+        });
+    });
   }
 
   const subjectButtons = [];
   const bodyButtons = [];
-  if (selected[0]) {
-    Object.keys(selected[0]).map((key, i) => {
-      if (typeof selected[0][key] == 'object') {
-        for (const [nestedKey, ii] of Object.entries(selected[0][key])) {
+  const [contact1] = selectedContacts;
+  if (contact1) {
+    Object.keys(contact1).map((key, i) => {
+      if (typeof contact1[key] == 'object') {
+        for (const [nestedKey, ii] of Object.entries(contact1[key])) {
           subjectButtons.push(
             <button
               onClick={() => {
@@ -214,19 +196,10 @@ function SendEmail({ auth, selected }) {
         console.log('Error getting documents: ', error);
       });
   }, []);
-  console.log(emailContent);
-
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.replace(/^.*base64,/, ''));
-      reader.onerror = (error) => reject(error);
-    });
 
   return (
     <div className="text-center">
-      {selected.map((s, i) => (
+      {selectedContacts.map((s, i) => (
         <p key={i}>{s.firstName}</p>
       ))}
       <div>
@@ -237,7 +210,7 @@ function SendEmail({ auth, selected }) {
           value={emailContent.subject}
         />
         <br />
-        {selected[0] ? <div>{subjectButtons}</div> : <div></div>}
+        {contact1 ? <div>{subjectButtons}</div> : <div></div>}
         <br />
         <label>Body</label>
         <textarea
@@ -248,7 +221,7 @@ function SendEmail({ auth, selected }) {
           value={emailContent.body}
         />
 
-        {selected[0] ? <div>{bodyButtons}</div> : <div></div>}
+        {contact1 ? <div>{bodyButtons}</div> : <div></div>}
         <br />
         <div>
           <input
@@ -318,7 +291,7 @@ function SendEmail({ auth, selected }) {
 }
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  selected: state.contacts.selectedContacts,
+  selectedContacts: state.contacts.selectedContacts,
 });
 
 export default connect(mapStateToProps)(SendEmail);
