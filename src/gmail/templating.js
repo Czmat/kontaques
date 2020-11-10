@@ -19,22 +19,18 @@ export default function templateEmail(contact, body) {
         trim = s[s.length - 1];
         // s = s.replace(/[!?,."]/g, '');
         s = s.slice(0, s.length - 1);
-        console.log('s', s);
       }
       if (s[s.length - 1] == '%') {
         let attribute = s.replace(/%/g, '');
         let nested = attribute.split('.');
 
-        console.log('nested', nested);
         if (index > -1) {
           // if this is a nested attribute, your new word has two indices
           if (nested[1] && contact[nested[0]][nested[1]]) {
             newWord = contact[nested[0]][nested[1]];
-            console.log('newword', newWord);
 
             splitString.splice(index, 1, newWord);
           } else if (contact[attribute]) {
-            console.log('contactattribute', contact[attribute]);
             newWord = contact[attribute].concat(trim);
             splitString.splice(index, 1, newWord);
           } else {
@@ -44,7 +40,6 @@ export default function templateEmail(contact, body) {
       }
     }
   });
-  console.log('splitString', splitString);
   if (splitString[0] == '!Subject!') {
     splitString.shift();
     templatedSubject = splitString.join(' ');
