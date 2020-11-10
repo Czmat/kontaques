@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import templateEmail, {
   templatedBody,
   templatedSubject,
-} from '../gmail/templating';
+} from '../../gmail/templating';
 
-import firebase from '../firebase/firebase';
+import firebase from '../../firebase/firebase';
 import { isCompositeComponent } from 'react-dom/test-utils';
 
 function SendEmail({ auth, selectedContacts }) {
@@ -267,7 +267,6 @@ function SendEmail({ auth, selectedContacts }) {
             </button>
           </div>
         )}
-
         <div style={{ border: '1px solid blue' }}>
           Templates
           <br />

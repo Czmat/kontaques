@@ -1,0 +1,78 @@
+.Contacts {
+  padding: 1.5rem;
+}
+
+.ContactList button {
+  background: rgb(143, 143, 143);
+  color: white;
+  font: inherit;
+  border: 1.5px solid rgb(143, 143, 143);
+  padding: 1px 2px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.ContactList button:hover,
+.ContactList button:active {
+  background: white;
+  color: rgb(143, 143, 143);
+}
+
+.ContactList button:focus {
+  outline: none;
+}
+
+.ContactList {
+  min-width: 16rem;
+  display: flex;
+  margin: 20px auto;
+  box-shadow: 0 2px 3px #ccc;
+  border: 1px solid #eee;
+  padding: 10px;
+  justify-content: center;
+}
+
+.ContactList .formGroup {
+  min-width: 15rem;
+  position: relative;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.ContactList .formGroup button {
+  position: absolute;
+  right: 0;
+}
+
+.formGroup input {
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.formGroup li {
+  padding-left: 0.5rem;
+}
+
+.ContactList input[type='checkbox'] {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 10%;
+  background: white;
+  width: 1rem;
+  height: 1rem;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.ContactList input[type='checkbox']:checked {
+  border: gray;
+  background: gray;
+}
+
+@media (min-width: 600px) {
+  .ContactList {
+    width: 500px;
+  }
+}
