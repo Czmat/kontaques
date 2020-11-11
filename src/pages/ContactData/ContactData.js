@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ContactData.module.css';
 import Input from '../../components/UI/Input/Input';
 import { formConfig } from './form.config';
@@ -6,9 +6,176 @@ import checkValidity from './validationRules';
 import firebase from '../../firebase/firebase';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
+import statesArr from './states.partial';
 
-function ContactData({ auth, contacts, dispatch }) {
+function ContactData({ auth, updateContact, dispatch }) {
   const [contactData, setContactData] = useState(formConfig);
+
+  // if updateContact is true setContactData with updateFormConfig
+  useEffect(() => {
+    // UPDATE FORM CONFIG for QR contact
+    if (updateContact) {
+      const updateFormConfig = {
+        contactForm: {
+          firstName: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'First Name',
+            },
+            value: updateContact.firstName,
+            validation: {
+              required: true,
+            },
+            valid: true,
+            touched: false,
+            errorMsg: 'Please enter a first name',
+          },
+          lastName: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Last Name',
+            },
+            value: updateContact.lastName,
+            validation: {
+              required: true,
+            },
+            valid: true,
+            touched: false,
+            errorMsg: 'Please enter a last name',
+          },
+          telephone: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'tel',
+              placeholder: '123-456-7890',
+            },
+            value: updateContact.telephone,
+            validation: {
+              required: true,
+              isPhone: true,
+            },
+            valid: true,
+            touched: false,
+            errorMsg: 'Please enter a 10 digit numeric phone number',
+          },
+          email: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'email',
+              placeholder: 'Email',
+            },
+            value: updateContact.email,
+            validation: {
+              required: true,
+              isEmail: true,
+            },
+            valid: true,
+            touched: false,
+            errorMsg: 'Please enter an email.',
+          },
+          occupation: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Occupation',
+            },
+            value: updateContact.occupation,
+            validation: {
+              required: true,
+            },
+            valid: true,
+            touched: false,
+            errorMsg: 'Please enter an occupation',
+          },
+          street_address: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Street Address',
+            },
+            value: updateContact ? updateContact.address.street_address : '',
+            validation: {
+              required: true,
+            },
+            valid: true,
+            touched: false,
+            errorMsg: 'Please enter your street address.',
+          },
+          city: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'City',
+            },
+            value: updateContact ? updateContact.address.city : '',
+            validation: {
+              required: true,
+            },
+            valid: true,
+            touched: false,
+            errorMsg: 'Please enter a city',
+          },
+          state: {
+            elementType: 'select',
+            elementConfig: {
+              options: statesArr,
+            },
+            value: updateContact ? updateContact.address.state : '',
+            validation: {},
+            valid: true,
+          },
+          zipCode: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Zip',
+            },
+            value: updateContact ? updateContact.address.zipCode : '',
+            validation: {
+              required: true,
+              minLength: 5,
+              maxLength: 5,
+              isNumeric: true,
+            },
+            valid: true,
+            touched: false,
+            errorMsg: 'Please enter a 5 digit numeric zip code',
+          },
+          description: {
+            elementType: 'textarea',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Enter some notes..',
+            },
+            value: updateContact.description,
+            validation: {
+              required: false,
+            },
+            valid: true,
+            touched: false,
+          },
+          photoFile: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'file',
+              accept: 'image/*',
+            },
+            value: '',
+            validation: {
+              required: false,
+            },
+            valid: true,
+            touched: false,
+          },
+        },
+        formIsValid: false,
+      };
+      setContactData(updateFormConfig);
+    }
+  }, [updateContact]);
+
   // redirect dashboard
   let history = useHistory();
 
@@ -105,7 +272,6 @@ function ContactData({ auth, contacts, dispatch }) {
         contactCollection.get().then((snapshot) => {
           const data = snapshot.docs.map((d) => d.data());
           dispatch({ type: 'GET_CONTACTS', payload: data });
-
           goToDashboard();
         });
       });
@@ -142,6 +308,7 @@ function ContactData({ auth, contacts, dispatch }) {
             });
         });
     }
+    dispatch({ type: 'UPDATE_CONTACT', payload: null });
   };
 
   const formElementsArray = [];
@@ -181,6 +348,7 @@ function ContactData({ auth, contacts, dispatch }) {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   contacts: state.contacts,
+  updateContact: state.contacts.updateContact,
 });
 
 export default connect(mapStateToProps)(ContactData);
