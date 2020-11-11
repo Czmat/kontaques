@@ -9,6 +9,7 @@ import { useHistory } from 'react-router';
 
 function UpdateContact({ auth, updateContact, dispatch }) {
   //this object is in here because I dont have time to figure out how to import redux state into config
+  // console.log('my contact to update', updateContact);
   const updateFormConfig = {
     contactForm: {
       firstName: {
@@ -311,6 +312,7 @@ function UpdateContact({ auth, updateContact, dispatch }) {
       }
     }
   };
+
   const deleteContact = () => {
     contactCollection
       .doc(updateContact.id)
