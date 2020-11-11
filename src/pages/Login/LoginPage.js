@@ -63,9 +63,9 @@ function LoginPage({ auth, dispatch }) {
   };
 
   return (
-    <div className='main'>
+    <div className="main">
       <div className={s.Login_container}>
-        <button className='button' onClick={loginHandler}>
+        <button className="button" onClick={loginHandler}>
           Log In
         </button>
       </div>
