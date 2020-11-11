@@ -4,6 +4,7 @@ import templateEmail, {
   templatedBody,
   templatedSubject,
 } from '../../gmail/templating';
+import styles from './SendEmail.module.css';
 
 import firebase from '../../firebase/firebase';
 import { isCompositeComponent } from 'react-dom/test-utils';
@@ -198,93 +199,117 @@ function SendEmail({ auth, selectedContacts }) {
   }, []);
 
   return (
-    <div className="text-center">
-      {selectedContacts.map((s, i) => (
-        <p key={i}>{s.firstName}</p>
-      ))}
-      <div>
-        <label>Subject</label>
-        <input
-          name="subject"
-          onChange={onChange}
-          value={emailContent.subject}
-        />
-        <br />
-        {contact1 ? <div>{subjectButtons}</div> : <div></div>}
-        <br />
-        <label>Body</label>
-        <textarea
-          className="email-body"
-          name="body"
-          id="body"
-          onChange={onChange}
-          value={emailContent.body}
-        />
-
-        {contact1 ? <div>{bodyButtons}</div> : <div></div>}
-        <br />
-        <div>
-          <input
-            type="file"
-            name="attachment"
-            onChange={(e) => {
-              const [file] = e.target.files;
-
-              setEmailContent({
-                ...emailContent,
-                attachments: [...emailContent.attachments, file],
-              });
-              e.target.value = '';
-            }}
-          />
-        </div>
-        {uploadedAttachments}
-        <br />
-
-        <button onClick={sendEmail}>Send Email</button>
-        <br />
-
-        {show ? (
-          <div>
-            <label>Template Name</label>
+    <div className={styles.sendEmail}>
+      {selectedContacts.length > 0 ? (
+        <div className='text-center'>
+          <ul>
+            {selectedContacts.map((s, i) => (
+              <li key={i}>
+                <h3>{s.firstName}</h3>
+              </li>
+            ))}
+          </ul>
+          <div className={styles.emailForm}>
+            <label>Subject</label>
+            {contact1 ? (
+              <div className={styles.emailKeys}>{subjectButtons}</div>
+            ) : (
+              <div></div>
+            )}
             <input
-              type="text"
-              name="templateName"
-              onChange={(e) => {
-                tempName = e.target.value;
-              }}
-            ></input>
-            <button onClick={saveTemplate}>Save Template</button>
-          </div>
-        ) : (
-          <div>
-            <button
-              onClick={() => {
-                setShow(true);
-              }}
-            >
-              Save Template
-            </button>
-          </div>
-        )}
-        <div style={{ border: '1px solid blue' }}>
-          Templates
-          <br />
-          {templates.map((t, i) => (
-            <>
-              <button
-                style={{ color: 'blue' }}
-                onClick={() => {
-                  setEmailContent({ subject: t.subject, body: t.body });
+              name='subject'
+              onChange={onChange}
+              value={emailContent.subject}
+            />
+            {/* <br />
+
+            <br /> */}
+            <label className={styles.emailBodyLabel}>Body</label>
+            {contact1 ? (
+              <div className={styles.emailKeys}>{bodyButtons}</div>
+            ) : (
+              <div></div>
+            )}
+            <textarea
+              // className='email-body'
+              name='body'
+              id='body'
+              onChange={onChange}
+              value={emailContent.body}
+            />
+
+            <br />
+            <div>
+              <input
+                type='file'
+                name='attachment'
+                onChange={(e) => {
+                  const [file] = e.target.files;
+
+                  setEmailContent({
+                    ...emailContent,
+                    attachments: [...emailContent.attachments, file],
+                  });
+                  e.target.value = '';
                 }}
-              >
-                {t.id}
-              </button>
-              <br />
-            </>
-          ))}
+              />
+            </div>
+            {uploadedAttachments}
+            <br />
+
+            <button className={styles.submitButton} onClick={sendEmail}>
+              Send Email
+            </button>
+            <br />
+            {show ? (
+              <div className={styles.saveTemplate}>
+                <label>Template Name</label>
+                <input
+                  type='text'
+                  name='templateName'
+                  onChange={(e) => {
+                    tempName = e.target.value;
+                  }}
+                ></input>
+                <button className={styles.submitButton} onClick={saveTemplate}>
+                  Save Template
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  className={styles.submitButton}
+                  onClick={() => {
+                    setShow(true);
+                  }}
+                >
+                  Add Template
+                </button>
+              </div>
+            )}
+            <div
+              className={styles.templateDisplay}
+              style={{ border: '1px solid blue' }}
+            >
+              {templates.map((t, i) => (
+                <div className={styles.templates}>
+                  <button
+                    style={{ color: 'blue' }}
+                    onClick={() => {
+                      setEmailContent({ subject: t.subject, body: t.body });
+                    }}
+                  >
+                    {t.id}
+                  </button>
+                  <br />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <h2>Please select contacts</h2>
+      )}
     </div>
   );
 }
