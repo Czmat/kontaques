@@ -6,14 +6,6 @@
   text-align: center;
   margin: 6rem;
 }
-/* .emailForm {
-  min-width: 16rem;
-  width: 80%;
-  margin: 20px auto;
-  box-shadow: 0 2px 3px #ccc;
-  border: 1px solid #eee;
-  padding: 10px;
-} */
 
 button {
   background: rgb(143, 143, 143);
@@ -37,9 +29,10 @@ button:focus {
   outline: none;
 }
 
-button.submitEmail {
+button.submitButton {
   font-weight: bold;
   font-size: 1rem;
+  margin-bottom: 1rem;
 }
 
 .sendEmail ul {
@@ -57,29 +50,35 @@ button.submitEmail {
   border: 1px solid #eee;
 }
 
+.emailForm .emailKeys button {
+  margin: 2px;
+}
+
 .emailForm label {
   font-weight: bold;
+  margin-bottom: 1rem;
 }
 
 .emailForm label,
-.emailForm input {
+.emailForm input,
+.emailForm textarea {
   display: block;
   margin-top: 1rem;
   width: 100%;
 }
 
-.emailBodyLabel {
-  margin-bottom: 1rem;
-}
-
-.emailKeys {
-  text-align: center;
-}
-
 .emailForm textarea {
-  display: block;
-  margin-top: 0.5rem;
+  word-wrap: break-word;
+  height: 100px;
   width: 100%;
+}
+
+.emailForm .saveTemplate {
+  margin: 1rem 0;
+}
+
+.emailForm .saveTemplate button {
+  margin-top: 1rem;
 }
 
 .emailForm input + label {
@@ -88,9 +87,20 @@ button.submitEmail {
   vertical-align: bottom;
 }
 
-.emailForm input:focus {
+.emailForm input:focus,
+.emailForm textarea:focus {
   outline: none;
   background: #d8f3df;
+}
+
+.emailForm .templateDisplay {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.emailForm .templateDisplay .templates {
+  display: inline-block;
+  margin: 2px;
 }
 
 @media (min-width: 40rem) {
