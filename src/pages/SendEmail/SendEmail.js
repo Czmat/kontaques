@@ -8,33 +8,68 @@ import templateEmail, {
 import firebase from '../../firebase/firebase';
 import { isCompositeComponent } from 'react-dom/test-utils';
 
-function SendEmail({ auth, selected }) {
-  const [emailContent, setEmailContent] = useState({ subject: '', body: '' });
+function SendEmail({ auth, selectedContacts }) {
+  const [emailContent, setEmailContent] = useState({
+    subject: '',
+    body: '',
+    attachments: [],
+  });
   const [show, setShow] = useState(false);
+
   const [templates, setTemplates] = useState([]);
   const onChange = (e) => {
     e.preventDefault();
     setEmailContent({ ...emailContent, [e.target.name]: e.target.value });
   };
-  function sendEmail() {
-    selected.map((s) => {
+
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        console.log('reader.result', reader.result);
+        return resolve(reader.result.replace(/^.*;base64,/, ''));
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+
+  async function sendEmail() {
+    const encodedAttachments = await Promise.all(
+      emailContent.attachments.map(async (a) => {
+        let attachment = await toBase64(a);
+        const type = a.type || 'application/octet-stream';
+        return (
+          `--your_boundary\r\n` +
+          `Content-Type: ${type}; name="${a.name}"\r\n` +
+          `Content-Transfer-Encoding: base64\r\n` +
+          `Content-Disposition: attachment; filename="${a.name}"\r\n\r\n` +
+          `${attachment}\r\n\r\n`
+        );
+      })
+    );
+    let attachments = encodedAttachments.join('');
+
+    selectedContacts.forEach((s) => {
       // this templated email returns the body with variables replaced. the result is import as 'result'
       templateEmail(s, emailContent.body);
       templateEmail(s, '!Subject! ' + emailContent.subject);
-      console.log(templatedSubject, templatedBody);
+
       const message =
-        `From: ${auth.auth.email}.\r\n` +
+        'Content-Type: multipart/mixed; boundary="your_boundary"\r\n' +
+        `From: ${auth.auth.email}\r\n` +
         `To: ${s.email}\r\n` +
-        'Content-Type: text/html\r\n' +
         `Subject: ${templatedSubject}\r\n\r\n` +
-        `${templatedBody}`;
+        `--your_boundary\r\n` +
+        'Content-Type: text/html\r\n\r\n' +
+        `${templatedBody}\r\n` +
+        `${attachments}` +
+        '--your_boundary--\r\n';
+
       const encodedMessage = btoa(message);
       const reallyEncodedMessage = encodedMessage
         .replace(/\+/g, '-')
         .replace(/\//g, '_')
         .replace(/=+$/, '');
-
-      console.log('message', message);
 
       window.gapi.client.gmail.users.messages
         .send({
@@ -51,10 +86,11 @@ function SendEmail({ auth, selected }) {
 
   const subjectButtons = [];
   const bodyButtons = [];
-  if (selected[0]) {
-    Object.keys(selected[0]).map((key, i) => {
-      if (typeof selected[0][key] == 'object') {
-        for (const [nestedKey, ii] of Object.entries(selected[0][key])) {
+  const [contact1] = selectedContacts;
+  if (contact1) {
+    Object.keys(contact1).map((key, i) => {
+      if (typeof contact1[key] == 'object') {
+        for (const [nestedKey, ii] of Object.entries(contact1[key])) {
           subjectButtons.push(
             <button
               onClick={() => {
@@ -128,11 +164,24 @@ function SendEmail({ auth, selected }) {
     }
   }
 
+  function removeAttachments(a) {
+    const index = emailContent.attachments.indexOf(a);
+    const newArray = emailContent.attachments.slice(index - 1, index);
+    setEmailContent({ ...emailContent, attachments: newArray });
+  }
+  const uploadedAttachments = emailContent.attachments.map((a) => (
+    <div>
+      <p>{a.name}</p>
+      <button onClick={(a) => removeAttachments(a)}>X</button>
+    </div>
+  ));
+
   useEffect(() => {
     firebase
       .firestore()
       .collection(`users/${auth.auth.uid}/templates/`)
       .get()
+
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
           // doc.data() is never undefined for query doc snapshots
@@ -141,7 +190,6 @@ function SendEmail({ auth, selected }) {
             ...templates,
             { id: doc.id, subject: doc.data().subject, body: doc.data().body },
           ]);
-          console.log(doc.id, ' => ', doc.data());
         });
       })
       .catch(function (error) {
@@ -150,32 +198,47 @@ function SendEmail({ auth, selected }) {
   }, []);
 
   return (
-    <div className='text-center'>
-      {selected.map((s, i) => (
+    <div className="text-center">
+      {selectedContacts.map((s, i) => (
         <p key={i}>{s.firstName}</p>
       ))}
       <div>
         <label>Subject</label>
         <input
-          name='subject'
+          name="subject"
           onChange={onChange}
           value={emailContent.subject}
         />
         <br />
-        {selected[0] ? <div>{subjectButtons}</div> : <div></div>}
+        {contact1 ? <div>{subjectButtons}</div> : <div></div>}
         <br />
         <label>Body</label>
         <textarea
-          className='email-body'
-          name='body'
-          id='body'
+          className="email-body"
+          name="body"
+          id="body"
           onChange={onChange}
           value={emailContent.body}
         />
 
-        {selected[0] ? <div>{bodyButtons}</div> : <div></div>}
-
+        {contact1 ? <div>{bodyButtons}</div> : <div></div>}
         <br />
+        <div>
+          <input
+            type="file"
+            name="attachment"
+            onChange={(e) => {
+              const [file] = e.target.files;
+
+              setEmailContent({
+                ...emailContent,
+                attachments: [...emailContent.attachments, file],
+              });
+              e.target.value = '';
+            }}
+          />
+        </div>
+        {uploadedAttachments}
         <br />
 
         <button onClick={sendEmail}>Send Email</button>
@@ -185,8 +248,8 @@ function SendEmail({ auth, selected }) {
           <div>
             <label>Template Name</label>
             <input
-              type='text'
-              name='templateName'
+              type="text"
+              name="templateName"
               onChange={(e) => {
                 tempName = e.target.value;
               }}
@@ -227,7 +290,7 @@ function SendEmail({ auth, selected }) {
 }
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  selected: state.contacts.selectedContacts,
+  selectedContacts: state.contacts.selectedContacts,
 });
 
 export default connect(mapStateToProps)(SendEmail);
