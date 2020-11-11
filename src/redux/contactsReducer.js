@@ -1,5 +1,9 @@
 export default (
-  state = { contacts: [], selectedContacts: [], updateContact: '' },
+  state = {
+    contacts: [],
+    selectedContacts: [],
+    updateContact: '',
+  },
   action
 ) => {
   switch (action.type) {
