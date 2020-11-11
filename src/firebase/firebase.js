@@ -1,21 +1,25 @@
 import firebase from 'firebase';
 import firebaseConfig from './firebaseConfig';
 
-firebase.initializeApp(firebaseConfig)
-console.log('firebase initialized')
+firebase.initializeApp(firebaseConfig);
+console.log('firebase initialized');
 const provider = new firebase.auth.GoogleAuthProvider();
-
 
 provider.addScope('https://mail.google.com/');
 
 export function signIn() {
-const GoogleAuth = window.gapi.auth2.getAuthInstance();
+  const gapi = window.gapi;
 
-  firebase.auth().signInWithPopup(provider).then(() => {
-    if (!window.gapi.auth2.getAuthInstance().isSignedIn.get()) {
-      GoogleAuth.signIn();
-    }
-  });
+  firebase
+    .auth()
+    .signInWithPopup(provider)
+    .then(() => {
+      const authInstance = gapi.auth2.getAuthInstance();
+      if (!authInstance.isSignedIn.get()) {
+        authInstance.signIn();
+        console.log('AUTH2 SIGN in');
+      }
+    });
 }
 
 export default firebase;
