@@ -3,6 +3,7 @@ import QrReader from 'react-qr-reader';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 import vCard from 'vcard-parser';
+import styles from './Scanner.module.css';
 
 const Scanner = ({ dispatch, qrContact }) => {
   const [qrData, setQrData] = useState({
@@ -72,23 +73,25 @@ const Scanner = ({ dispatch, qrContact }) => {
   };
   console.log('qr data', qrContact);
   return (
-    <div style={firstDiv}>
-      <select
-        onChange={(e) => setQrData({ ...qrData, facingMode: e.target.value })}
-      >
-        <option value="user">Front Camera</option>
-        <option value="environment">Rear Camera</option>
-      </select>
-      <QrReader
-        delay={qrData.delay}
-        style={previewStyle}
-        onError={handleError}
-        onScan={handleScan}
-        facingMode={qrData.facingMode}
-      />
-      <p>{qrData.result}</p>
-
-      <h1>My Scanner</h1>
+    <div className={styles.main}>
+      <h1>QR Scanner</h1>
+      <div className={styles.qr_container}>
+        <select
+          onChange={(e) => setQrData({ ...qrData, facingMode: e.target.value })}
+        >
+          <option value='user'>Front Camera</option>
+          <option value='environment'>Rear Camera</option>
+        </select>
+        <QrReader
+          className={styles.qr_scanner}
+          delay={qrData.delay}
+          // style={previewStyle}
+          onError={handleError}
+          onScan={handleScan}
+          facingMode={qrData.facingMode}
+        />
+        <p>{qrData.result}</p>
+      </div>
     </div>
   );
 };

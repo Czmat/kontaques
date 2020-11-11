@@ -37,7 +37,7 @@
 .ContactList .formGroup {
   width: 100%;
   min-width: 15rem;
-  min-height: 4rem;
+  /* min-height: 4rem; */
   position: relative;
   padding: 0.5rem;
   text-align: left;
