@@ -346,6 +346,14 @@ function UpdateContact({ auth, updateContact, dispatch }) {
 
   let form = (
     <form onSubmit={contactSubmitHandler}>
+      {updateContact.photoFile ? (
+        <div
+          className={styles.contact_image}
+          style={{ backgroundImage: `url(${updateContact.photoFile})` }}
+        ></div>
+      ) : (
+        <div style={{ margin: '0.5rem' }}>Consider adding photo</div>
+      )}
       {formElementsArray.map((formElement) => (
         <Input
           key={formElement.id}
@@ -360,20 +368,22 @@ function UpdateContact({ auth, updateContact, dispatch }) {
         />
       ))}
 
-      {updateContact.photoFile ? (
-        <img src={updateContact.photoFile} alt={updateContact.photoFile}></img>
-      ) : (
-        'Consider adding photo'
-      )}
-      <button disabled={contactData.formIsValid}>Update Contact</button>
+      <button
+        className={styles.submitButton}
+        disabled={contactData.formIsValid}
+      >
+        Update Contact
+      </button>
     </form>
   );
   return (
     <div className={styles.ContactData}>
-      <h4>Enter you Contact Data</h4>
+      <h4>Update Contact Data</h4>
       {form}
 
-      <button onClick={deleteContact}>Delete</button>
+      <button className={styles.submitButton} onClick={deleteContact}>
+        Delete
+      </button>
     </div>
   );
 }

@@ -334,7 +334,12 @@ function ContactData({ auth, updateContact, dispatch }) {
           error={formElement.config.errorMsg}
         />
       ))}
-      <button disabled={!contactData.formIsValid}>Add Contact</button>
+      <button
+        className={styles.submitButton}
+        disabled={!contactData.formIsValid}
+      >
+        Add Contact
+      </button>
     </form>
   );
   return (

@@ -58,11 +58,12 @@ const ContactList = ({ updateContact, contacts, dispatch }) => {
                     ) : (
                       <div
                         className={styles.contact_image}
-                        style={{ display: 'none' }}
+                        style={{ display: 'invisible' }}
                       ></div>
                     )}
                     {'    '}
                     <li key={contact.id}>{contact.firstName}</li>
+                    <li key={contact.id}>{contact.lastName}</li>
                     {'    '}
                     <button onClick={(e) => editContact(contact)}>
                       Update

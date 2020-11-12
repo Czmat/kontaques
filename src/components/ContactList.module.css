@@ -26,7 +26,7 @@
 
 .ContactList {
   min-width: 16rem;
-  display: flex;
+  /* display: flex; */
   margin: 20px auto;
   box-shadow: 0 2px 3px #ccc;
   border: 1px solid #eee;
@@ -37,7 +37,7 @@
 .ContactList .formGroup {
   width: 100%;
   min-width: 15rem;
-  /* min-height: 4rem; */
+  min-height: 4rem;
   position: relative;
   padding: 0.5rem;
   text-align: left;
@@ -51,6 +51,7 @@
   display: inline-block;
   vertical-align: middle;
   right: 0;
+  top: 28%;
   /* justify-content: center; */
 }
 
@@ -103,5 +104,9 @@
 @media (min-width: 600px) {
   .ContactList {
     width: 500px;
+  }
+
+  .ContactList .formGroup {
+    margin: 0.5rem 0;
   }
 }
