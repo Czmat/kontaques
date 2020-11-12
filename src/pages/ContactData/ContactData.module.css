@@ -1,5 +1,5 @@
 .ContactData {
-  margin: 20px auto;
+  margin: 6rem auto;
   width: 80%;
   text-align: center;
   box-shadow: 0 2px 3px #ccc;
@@ -8,8 +8,27 @@
   box-sizing: border-box;
 }
 
+.contact_image {
+  vertical-align: middle;
+  display: inline-block;
+  height: 3rem;
+  width: 3rem;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  margin: 1rem;
+  border-radius: 10px;
+}
+
+button.submitButton {
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0.5rem;
+}
+
 @media (min-width: 600px) {
   .ContactData {
+    margin-top: 10rem;
     width: 500px;
   }
 }

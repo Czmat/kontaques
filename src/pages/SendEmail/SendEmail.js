@@ -271,7 +271,13 @@ function SendEmail({ auth, selectedContacts }) {
                     tempName = e.target.value;
                   }}
                 ></input>
-                <button className={styles.submitButton} onClick={saveTemplate}>
+                <button
+                  className={styles.submitButton}
+                  onClick={() => {
+                    saveTemplate();
+                    setShow(false);
+                  }}
+                >
                   Save Template
                 </button>
               </div>

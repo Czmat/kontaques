@@ -34,37 +34,48 @@ const ContactList = ({ updateContact, contacts, dispatch }) => {
   };
 
   return (
-    <div className={styles.Contacts}>
-      <h4>My contacts</h4>
-      <ul className={styles.ContactList}>
-        <div>
-          {contacts.contacts.map((contact, i) => {
-            return (
-              <div className={styles.formGroup} key={i}>
-                <input
-                  type='checkbox'
-                  name='check'
-                  onChange={(e) => addContact(e, contact)}
-                  checked={isChecked(contact.id)}
-                />
-                {'    '}
-                <li style={{ display: 'inline-block' }} key={contact.id}>
-                  {contact.firstName}
-                </li>
-                {'    '}
-                {contact.photoFile ? (
-                  <img src={contact.photoFile} alt={contact.photoFile} />
-                ) : (
-                  'no photo'
-                )}
-                {'    '}
-                <button onClick={(e) => editContact(contact)}>Update</button>
-              </div>
-            );
-          })}
+    <>
+      {contacts.contacts.length > 0 ? (
+        <div className={styles.Contacts}>
+          <h4>My contacts</h4>
+          <ul className={styles.ContactList}>
+            <div>
+              {contacts.contacts.map((contact, i) => {
+                return (
+                  <div className={styles.formGroup} key={i}>
+                    <input
+                      type='checkbox'
+                      name='check'
+                      onChange={(e) => addContact(e, contact)}
+                      checked={isChecked(contact.id)}
+                    />
+                    {'    '}
+                    {contact.photoFile ? (
+                      <div
+                        className={styles.contact_image}
+                        style={{ backgroundImage: `url(${contact.photoFile})` }}
+                      ></div>
+                    ) : (
+                      <div
+                        className={styles.contact_image}
+                        style={{ display: 'invisible' }}
+                      ></div>
+                    )}
+                    {'    '}
+                    <li>{contact.firstName}</li>
+                    <li>{contact.lastName}</li>
+                    {'    '}
+                    <button onClick={(e) => editContact(contact)}>
+                      Update
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </ul>
         </div>
-      </ul>
-    </div>
+      ) : null}
+    </>
   );
 };
 

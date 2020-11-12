@@ -26,7 +26,7 @@
 
 .ContactList {
   min-width: 16rem;
-  display: flex;
+  /* display: flex; */
   margin: 20px auto;
   box-shadow: 0 2px 3px #ccc;
   border: 1px solid #eee;
@@ -35,15 +35,24 @@
 }
 
 .ContactList .formGroup {
+  width: 100%;
   min-width: 15rem;
+  min-height: 4rem;
   position: relative;
   padding: 0.5rem;
   text-align: left;
+  display: inline-block;
+  /* justify-content: center; */
+  vertical-align: middle;
 }
 
 .ContactList .formGroup button {
   position: absolute;
+  display: inline-block;
+  vertical-align: middle;
   right: 0;
+  top: 28%;
+  /* justify-content: center; */
 }
 
 .formGroup input {
@@ -52,7 +61,28 @@
 }
 
 .formGroup li {
+  /* color: red; */
+  display: inline-block;
+
+  list-style: none;
+  margin: 0;
   padding-left: 0.5rem;
+}
+
+.formGroup button {
+  /* vertical-align: middle; */
+}
+
+.contact_image {
+  vertical-align: middle;
+  display: inline-block;
+  height: 3rem;
+  width: 3rem;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  margin: 0 0.5rem;
+  border-radius: 10px;
 }
 
 .ContactList input[type='checkbox'] {
@@ -74,5 +104,9 @@
 @media (min-width: 600px) {
   .ContactList {
     width: 500px;
+  }
+
+  .ContactList .formGroup {
+    margin: 0.5rem 0;
   }
 }

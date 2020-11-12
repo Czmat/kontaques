@@ -1,0 +1,39 @@
+.main {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.main h1 {
+  margin: 6rem auto 3rem auto;
+}
+
+.qr_container {
+  margin: 3rem auto;
+  text-align: center;
+  padding: 1rem;
+}
+
+.qr_container h1,
+.qr_container .qr_scanner {
+  margin: 0.5rem auto;
+}
+
+.qr_container h1 {
+  margin-bottom: 4rem;
+}
+
+.qr_scanner {
+  width: 100%;
+  max-width: 250px;
+  border-radius: 2px;
+  border: 0.5px solid black;
+}
+
+@media (min-width: 40rem) {
+  .qr_container {
+    margin: auto;
+    width: 35rem;
+    box-shadow: 0 2px 3px #ccc;
+    border: 1px solid #eee;
+  }
+}
