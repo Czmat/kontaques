@@ -62,8 +62,8 @@ const ContactList = ({ updateContact, contacts, dispatch }) => {
                       ></div>
                     )}
                     {'    '}
-                    <li key={contact.id}>{contact.firstName}</li>
-                    <li key={contact.id}>{contact.lastName}</li>
+                    <li>{contact.firstName}</li>
+                    <li>{contact.lastName}</li>
                     {'    '}
                     <button onClick={(e) => editContact(contact)}>
                       Update
