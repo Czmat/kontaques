@@ -319,21 +319,21 @@ function UpdateContact({ auth, updateContact, dispatch }) {
       .delete()
       .then(function () {
         console.log('You are deleted!');
+        contactCollection.get().then((snapshot) => {
+          const data = snapshot.docs.map((d) => d.data());
+          dispatch({ type: 'GET_CONTACTS', payload: data });
+          goToDashboard();
+        });
+
+        // if photo exists for contact
+        if (updateContact.photoFile) {
+          const imgToDelete = storage.refFromURL(updateContact.photoFile);
+
+          imgToDelete
+            .delete()
+            .then(() => console.log('old image deleted successfully'));
+        }
       });
-    contactCollection.get().then((snapshot) => {
-      const data = snapshot.docs.map((d) => d.data());
-      dispatch({ type: 'GET_CONTACTS', payload: data });
-      goToDashboard();
-    });
-
-    // if photo exists for contact
-    if (updateContact.photoFile) {
-      const imgToDelete = storage.refFromURL(updateContact.photoFile);
-
-      imgToDelete
-        .delete()
-        .then(() => console.log('old image deleted successfully'));
-    }
   };
 
   const formElementsArray = [];
