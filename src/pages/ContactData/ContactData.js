@@ -195,8 +195,14 @@ function ContactData({ auth, updateContact, dispatch }) {
     // add photo to contact data as photoFile
     const photoFile = event.target.files;
     if (photoFile && photoFile.length > 0) {
-      console.log('e.file', event.target.files[0]);
-      updatedFormElement.photoFile = photoFile[0];
+      let renamedPhoto = photoFile[0];
+      // change name in file object before adding to store
+      // so that no duplicate names in firebase storage
+      Object.defineProperty(renamedPhoto, 'name', {
+        writable: true,
+        value: renamedPhoto.name + Date.now(),
+      });
+      updatedFormElement.photoFile = renamedPhoto;
     }
 
     updatedFormElement.valid = checkValidity(
@@ -272,6 +278,8 @@ function ContactData({ auth, updateContact, dispatch }) {
         contactCollection.get().then((snapshot) => {
           const data = snapshot.docs.map((d) => d.data());
           dispatch({ type: 'GET_CONTACTS', payload: data });
+          setContactData(formConfig);
+          dispatch({ type: 'UPDATE_CONTACT', payload: '' });
           goToDashboard();
         });
       });
@@ -304,11 +312,11 @@ function ContactData({ auth, updateContact, dispatch }) {
                 });
               });
               setContactData(formConfig);
+              dispatch({ type: 'UPDATE_CONTACT', payload: '' });
               goToDashboard();
             });
         });
     }
-    dispatch({ type: 'UPDATE_CONTACT', payload: null });
   };
 
   const formElementsArray = [];

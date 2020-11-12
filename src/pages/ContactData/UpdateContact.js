@@ -8,168 +8,171 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
 
 function UpdateContact({ auth, updateContact, dispatch }) {
-  //this object is in here because I dont have time to figure out how to import redux state into config
-  // console.log('my contact to update', updateContact);
-  const updateFormConfig = {
-    contactForm: {
-      firstName: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          placeholder: 'First Name',
-        },
-        value: updateContact.firstName,
-        validation: {
-          required: true,
-        },
-        valid: false,
-        touched: false,
-        errorMsg: 'Please enter a first name',
-      },
-      lastName: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          placeholder: 'Last Name',
-        },
-        value: updateContact.lastName,
-        validation: {
-          required: true,
-        },
-        valid: false,
-        touched: false,
-        errorMsg: 'Please enter a last name',
-      },
-      telephone: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'tel',
-          placeholder: '123-456-7890',
-        },
-        value: updateContact.telephone,
-        validation: {
-          required: true,
-          isPhone: true,
-        },
-        valid: false,
-        touched: false,
-        errorMsg: 'Please enter a 10 digit numeric phone number',
-      },
-      email: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'email',
-          placeholder: 'Email',
-        },
-        value: updateContact.email,
-        validation: {
-          required: true,
-          isEmail: true,
-        },
-        valid: false,
-        touched: false,
-        errorMsg: 'Please enter an email.',
-      },
-      occupation: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          placeholder: 'Occupation',
-        },
-        value: updateContact.occupation,
-        validation: {
-          required: true,
-        },
-        valid: false,
-        touched: false,
-        errorMsg: 'Please enter an occupation',
-      },
-      street_address: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          placeholder: 'Street Address',
-        },
-        value: updateContact ? updateContact.address.street_address : '',
-        validation: {
-          required: true,
-        },
-        valid: false,
-        touched: false,
-        errorMsg: 'Please enter your street address.',
-      },
-      city: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          placeholder: 'City',
-        },
-        value: updateContact ? updateContact.address.city : '',
-        validation: {
-          required: true,
-        },
-        valid: false,
-        touched: false,
-        errorMsg: 'Please enter a city',
-      },
-      state: {
-        elementType: 'select',
-        elementConfig: {
-          options: statesArr,
-        },
-        value: updateContact ? updateContact.address.state : '',
-        validation: {},
-        valid: true,
-      },
-      zipCode: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'text',
-          placeholder: 'Zip',
-        },
-        value: updateContact ? updateContact.address.zipCode : '',
-        validation: {
-          required: true,
-          minLength: 5,
-          maxLength: 5,
-          isNumeric: true,
-        },
-        valid: false,
-        touched: false,
-        errorMsg: 'Please enter a 5 digit numeric zip code',
-      },
-      description: {
-        elementType: 'textarea',
-        elementConfig: {
-          type: 'text',
-          placeholder: 'Enter some notes..',
-        },
-        value: updateContact.description,
-        validation: {
-          required: false,
-        },
-        valid: true,
-        touched: false,
-      },
-      photoFile: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'file',
-          accept: 'image/*',
-        },
-        value: '',
-        validation: {
-          required: false,
-        },
-        valid: true,
-        touched: false,
-      },
-    },
-    formIsValid: false,
-  };
   const [contactData, setContactData] = useState({});
+  // console.log('my contact to update', updateContact);
+
   useEffect(() => {
-    setContactData(updateFormConfig);
+    //this object is in here because I dont have time to figure out how to import redux state into config
+    if (updateContact) {
+      const updateFormConfig = {
+        contactForm: {
+          firstName: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'First Name',
+            },
+            value: updateContact.firstName,
+            validation: {
+              required: true,
+            },
+            valid: false,
+            touched: false,
+            errorMsg: 'Please enter a first name',
+          },
+          lastName: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Last Name',
+            },
+            value: updateContact.lastName,
+            validation: {
+              required: true,
+            },
+            valid: false,
+            touched: false,
+            errorMsg: 'Please enter a last name',
+          },
+          telephone: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'tel',
+              placeholder: '123-456-7890',
+            },
+            value: updateContact.telephone,
+            validation: {
+              required: true,
+              isPhone: true,
+            },
+            valid: false,
+            touched: false,
+            errorMsg: 'Please enter a 10 digit numeric phone number',
+          },
+          email: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'email',
+              placeholder: 'Email',
+            },
+            value: updateContact.email,
+            validation: {
+              required: true,
+              isEmail: true,
+            },
+            valid: false,
+            touched: false,
+            errorMsg: 'Please enter an email.',
+          },
+          occupation: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Occupation',
+            },
+            value: updateContact.occupation,
+            validation: {
+              required: true,
+            },
+            valid: false,
+            touched: false,
+            errorMsg: 'Please enter an occupation',
+          },
+          street_address: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Street Address',
+            },
+            value: updateContact ? updateContact.address.street_address : '',
+            validation: {
+              required: true,
+            },
+            valid: false,
+            touched: false,
+            errorMsg: 'Please enter your street address.',
+          },
+          city: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'City',
+            },
+            value: updateContact ? updateContact.address.city : '',
+            validation: {
+              required: true,
+            },
+            valid: false,
+            touched: false,
+            errorMsg: 'Please enter a city',
+          },
+          state: {
+            elementType: 'select',
+            elementConfig: {
+              options: statesArr,
+            },
+            value: updateContact ? updateContact.address.state : '',
+            validation: {},
+            valid: true,
+          },
+          zipCode: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Zip',
+            },
+            value: updateContact ? updateContact.address.zipCode : '',
+            validation: {
+              required: true,
+              minLength: 5,
+              maxLength: 5,
+              isNumeric: true,
+            },
+            valid: false,
+            touched: false,
+            errorMsg: 'Please enter a 5 digit numeric zip code',
+          },
+          description: {
+            elementType: 'textarea',
+            elementConfig: {
+              type: 'text',
+              placeholder: 'Enter some notes..',
+            },
+            value: updateContact.description,
+            validation: {
+              required: false,
+            },
+            valid: true,
+            touched: false,
+          },
+          photoFile: {
+            elementType: 'input',
+            elementConfig: {
+              type: 'file',
+              accept: 'image/*',
+            },
+            value: '',
+            validation: {
+              required: false,
+            },
+            valid: true,
+            touched: false,
+          },
+        },
+        formIsValid: false,
+      };
+      setContactData(updateFormConfig);
+    }
   }, [updateContact]);
 
   let history = useHistory();
@@ -190,7 +193,14 @@ function UpdateContact({ auth, updateContact, dispatch }) {
     // add photo to contact data as photoFile
     const photoFile = event.target.files;
     if (photoFile && photoFile.length > 0) {
-      updatedFormElement.photoFile = photoFile[0];
+      let renamedPhoto = photoFile[0];
+      // change name in file object before adding to store
+      // so that no duplicate names in firebase storage
+      Object.defineProperty(renamedPhoto, 'name', {
+        writable: true,
+        value: renamedPhoto.name + Date.now(),
+      });
+      updatedFormElement.photoFile = renamedPhoto;
     }
 
     updatedFormElement.valid = checkValidity(
@@ -260,6 +270,7 @@ function UpdateContact({ auth, updateContact, dispatch }) {
           contactCollection.get().then((snapshot) => {
             const data = snapshot.docs.map((d) => d.data());
             dispatch({ type: 'GET_CONTACTS', payload: data });
+            dispatch({ type: 'UPDATE_CONTACT', payload: '' });
             goToDashboard();
           });
         });
@@ -299,6 +310,7 @@ function UpdateContact({ auth, updateContact, dispatch }) {
                   contactCollection.get().then((snapshot) => {
                     const data = snapshot.docs.map((d) => d.data());
                     dispatch({ type: 'GET_CONTACTS', payload: data });
+                    dispatch({ type: 'UPDATE_CONTACT', payload: '' });
                     goToDashboard();
                   });
                 });
@@ -322,6 +334,7 @@ function UpdateContact({ auth, updateContact, dispatch }) {
         contactCollection.get().then((snapshot) => {
           const data = snapshot.docs.map((d) => d.data());
           dispatch({ type: 'GET_CONTACTS', payload: data });
+          dispatch({ type: 'UPDATE_CONTACT', payload: '' });
           goToDashboard();
         });
 
