@@ -24,9 +24,14 @@ export async function init(script) {
         discoveryDocs: DISCOVERY_DOCS,
       });
       gapi.load('auth2', async () => {
-        gapi.auth2.init({
+        await gapi.auth2.init({
           client_id: clientId,
         });
+        const authInstance = gapi.auth2.getAuthInstance();
+        if (!authInstance.isSignedIn.get()) {
+          authInstance.signIn();
+          console.log('AUTH2 SIGN in');
+        }
         console.log('init!!');
       });
     });
